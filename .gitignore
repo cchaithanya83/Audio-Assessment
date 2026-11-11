@@ -1,0 +1,6 @@
+recordings/
+*.webm
+*.wav
+assessment-backup*.json
+.DS_Store
+Thumbs.db

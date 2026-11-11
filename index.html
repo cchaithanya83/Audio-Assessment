@@ -1,0 +1,883 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audio Assessment</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f5fa; --panel:#ffffff; --panel-2:#f8f9fc; --ink:#151a2d; --muted:#626a85; --line:#e3e6ef; --line-2:#d3d8e6;
+  --accent:#4f46e5; --accent-2:#6366f1; --accent-soft:#eef0ff; --accent-ink:#ffffff;
+  --ok:#0f8a5f; --ok-bg:#e4f6ee; --bad:#d23b3b; --bad-bg:#fdecec; --warn:#b26205; --warn-bg:#fff4e2; --miss:#6b7280; --miss-bg:#eff1f5;
+  --shadow:0 1px 2px rgba(20,24,50,.04),0 8px 24px rgba(20,24,50,.06); --ring:0 0 0 4px rgba(79,70,229,.15);
+  --radius:14px; --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{--bg:#0d1020; --panel:#151a2e; --panel-2:#1a2036; --ink:#e8eaf4; --muted:#9aa1bd; --line:#262d48; --line-2:#323a5a;
+  --accent:#818cf8; --accent-2:#a5b4fc; --accent-soft:#1f2550; --accent-ink:#0d1020;
+  --ok:#4ade9b; --ok-bg:#12352a; --bad:#ff8585; --bad-bg:#3d1b22; --warn:#fbbf5c; --warn-bg:#3a2a12; --miss:#a1a9b4; --miss-bg:#232a40;
+  --shadow:0 1px 2px rgba(0,0,0,.3); --ring:0 0 0 4px rgba(129,140,248,.25);}
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto 0;height:320px;z-index:-1;background:radial-gradient(1200px 300px at 50% -60px,var(--accent-soft),transparent 70%)}
+header{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 24px;
+  background:color-mix(in srgb,var(--panel) 82%,transparent);backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.logo{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;box-shadow:0 4px 12px rgba(79,70,229,.3)}
+.brand h1{font-size:16px;margin:0;font-weight:700;letter-spacing:-.01em}
+.brand .sub{color:var(--muted);font-size:12px;line-height:1.2}
+main{max-width:1120px;margin:0 auto;padding:32px 16px 72px}
+.narrow{max-width:620px;margin:0 auto}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);margin-bottom:16px}
+h2{font-size:21px;margin:0 0 12px;letter-spacing:-.015em;font-weight:700} h3{font-size:15.5px;margin:0 0 12px;font-weight:650}
+.lede{text-align:center;margin:8px 0 28px}
+.lede h2{font-size:30px;margin-bottom:8px;letter-spacing:-.025em}
+.lede p{color:var(--muted);margin:0 auto;max-width:480px}
+label{display:block;font-size:13px;color:var(--muted);margin:14px 0 6px;font-weight:550}
+input[type=text],input[type=email],input[type=password],input[type=number],select,textarea{width:100%;padding:11px 13px;border:1px solid var(--line-2);border-radius:10px;background:var(--panel);color:var(--ink);font:inherit;transition:border-color .15s,box-shadow .15s}
+input::placeholder,textarea::placeholder{color:var(--muted);opacity:.7}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:var(--ring)}
+input[type=range]{accent-color:var(--accent)}
+input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px}
+button{font:inherit;padding:10px 18px;border-radius:10px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);cursor:pointer;font-weight:600;transition:transform .05s,background .15s,border-color .15s,box-shadow .15s}
+button:hover{border-color:var(--accent);color:var(--accent)}
+button:active{transform:translateY(1px)}
+button:focus-visible{outline:none;box-shadow:var(--ring)}
+button.primary{background:linear-gradient(180deg,var(--accent-2),var(--accent));border-color:transparent;color:var(--accent-ink);box-shadow:0 4px 14px rgba(79,70,229,.25)}
+button.primary:hover{color:var(--accent-ink);filter:brightness(1.06)}
+button.danger{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 40%,transparent)}
+button.danger:hover{background:var(--bad-bg)}
+button:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+button:disabled:hover{border-color:var(--line-2);color:inherit}
+button.small{padding:6px 12px;font-size:13px;border-radius:8px}
+button.big{padding:13px 22px;font-size:16px;border-radius:12px}
+a{color:var(--accent)}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 16px}
+@media (max-width:720px){.grid2,.grid3{grid-template-columns:1fr}}
+.muted{color:var(--muted)} .small{font-size:13px}
+.spacer{flex:1}
+.steps{display:flex;justify-content:center;gap:6px;margin:0 auto 24px;flex-wrap:wrap}
+.steps span{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:550;padding:6px 12px 6px 6px;border-radius:99px}
+.steps b{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;background:var(--line);color:var(--muted)}
+.steps .on{color:var(--ink);background:var(--panel);box-shadow:var(--shadow)} .steps .on b{background:var(--accent);color:#fff}
+.steps .done b{background:var(--ok);color:#fff}
+.reqs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px}
+@media (max-width:620px){.reqs{grid-template-columns:1fr}}
+.req{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2);font-size:13px;color:var(--muted)}
+.req svg{flex:none;color:var(--accent)} .req b{display:block;color:var(--ink);font-weight:600}
+.rules{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:10px}
+.rules li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:12px;background:var(--panel-2);border:1px solid var(--line)}
+.rules li::before{content:"";flex:none;width:8px;height:8px;margin-top:8px;border-radius:50%;background:var(--accent)}
+.tabs{display:flex;gap:4px;padding:4px;background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:20px;width:fit-content;max-width:100%;overflow-x:auto}
+.tabs button{border:none;border-radius:9px;background:none;color:var(--muted);padding:8px 16px;box-shadow:none;white-space:nowrap}
+.tabs button:hover{color:var(--ink)}
+.tabs button.on{color:var(--accent-ink);background:var(--accent)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:12px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr{transition:background .1s} tbody tr:hover{background:var(--panel-2)}
+th{color:var(--muted);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;background:var(--panel-2)}
+thead th:first-child{border-top-left-radius:10px} thead th:last-child{border-top-right-radius:10px}
+.pill{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600;white-space:nowrap}
+.pill.ok{background:var(--ok-bg);color:var(--ok)} .pill.bad{background:var(--bad-bg);color:var(--bad)}
+.pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.miss{background:var(--miss-bg);color:var(--miss)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px}
+.stat{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--panel-2)}
+.stat .v{font-size:24px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums} .stat .k{font-size:12px;color:var(--muted)}
+.player{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--panel-2)}
+.bar{flex:1;min-width:160px;height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .25s}
+.timer{font-variant-numeric:tabular-nums;font-weight:700;font-size:16px;padding:6px 12px;border-radius:99px;background:var(--accent-soft);color:var(--accent)}
+.timer.low{color:var(--bad);background:var(--bad-bg)}
+.answer{font-family:var(--mono);font-size:14px;line-height:1.7;min-height:360px}
+.diff{font-family:var(--mono);font-size:13.5px;line-height:2;white-space:pre-wrap;word-break:break-word;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2)}
+.diff .sub{background:var(--bad-bg);color:var(--bad);text-decoration:line-through;border-radius:4px;padding:1px 3px}
+.diff .exp{background:var(--ok-bg);color:var(--ok);border-radius:4px;padding:1px 3px}
+.diff .del{background:var(--miss-bg);color:var(--miss);border:1px dashed var(--miss);border-radius:4px;padding:0 3px}
+.diff .ins{background:var(--warn-bg);color:var(--warn);border-radius:4px;padding:1px 3px}
+.legend span{margin-right:12px}
+.mono{font-family:var(--mono);font-size:13px}
+.side{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:720px){.side{grid-template-columns:1fr}}
+.side pre{white-space:pre-wrap;word-break:break-word;margin:0;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2);font-family:var(--mono);font-size:13px;max-height:420px;overflow:auto}
+.notice{padding:12px 16px;border-radius:12px;background:var(--warn-bg);color:var(--warn);font-size:14px;margin-bottom:14px;border:1px solid color-mix(in srgb,var(--warn) 20%,transparent)}
+.check{display:flex;align-items:center;gap:10px;margin-top:12px;color:var(--ink);font-weight:500}
+.passage{font-size:19px;line-height:1.9;white-space:pre-wrap;max-height:52vh;overflow:auto;padding:22px 24px;border:1px solid var(--line);border-radius:14px;background:var(--panel-2)}
+.live{min-height:120px;max-height:30vh;overflow:auto;padding:14px 16px;border:1px dashed var(--line-2);border-radius:12px;background:var(--panel-2);white-space:pre-wrap}
+.live .interim{color:var(--muted)}
+.recdot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--bad);margin-right:6px;animation:blink 1s infinite;vertical-align:middle}
+@keyframes blink{50%{opacity:.25}}
+.kind{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;margin-top:4px}
+.done-card{text-align:center;padding:40px 28px}
+.done-icon{width:64px;height:64px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;font-size:30px;background:var(--ok-bg);color:var(--ok)}
+.spin{width:40px;height:40px;margin:0 auto 16px;border-radius:50%;border:4px solid var(--line);border-top-color:var(--accent);animation:sp .9s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+dialog{border:1px solid var(--line);border-radius:18px;background:var(--panel);color:var(--ink);padding:0;max-width:1040px;width:calc(100% - 32px);box-shadow:0 24px 60px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(13,16,32,.5);backdrop-filter:blur(3px)}
+.dlg-head{display:flex;align-items:center;gap:12px;padding:16px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:1}
+.dlg-body{padding:22px;max-height:80vh;overflow:auto}
+@media (max-width:620px){header{padding:10px 16px}.card{padding:18px}.lede h2{font-size:24px}main{padding-top:20px}}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="#" onclick="if(!isAdmin){location.hash='';home()}return false">
+    <span class="logo" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 10v4M8 6v12M12 3v18M16 7v10M20 10v4"/></svg></span>
+    <span><h1>Audio Assessment</h1><span class="sub">Listening &amp; speaking evaluation</span></span>
+  </a>
+  <div class="row" id="hdr"></div>
+</header>
+<main id="app"></main>
+<dialog id="dlg"></dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script>
+/* ---------------- Storage (IndexedDB, local only) ---------------- */
+// Browser-local store: only used for the assessor's chosen download folder handle.
+const LocalDB = {
+  db:null,
+  open(){return new Promise((res,rej)=>{const r=indexedDB.open('audio-assess-hosted',1);
+    r.onupgradeneeded=()=>{const d=r.result;['tests','submissions','kv'].forEach(s=>{if(!d.objectStoreNames.contains(s))d.createObjectStore(s,{keyPath:'id'})})};
+    r.onsuccess=()=>{this.db=r.result;res()};r.onerror=()=>rej(r.error)})},
+  tx(store,mode,fn){return new Promise((res,rej)=>{const t=this.db.transaction(store,mode);const req=fn(t.objectStore(store));
+    t.oncomplete=()=>res(req&&req.result);t.onerror=()=>rej(t.error)})},
+  all(s){return this.tx(s,'readonly',st=>st.getAll())},
+  get(s,id){return this.tx(s,'readonly',st=>st.get(id))},
+  put(s,v){return this.tx(s,'readwrite',st=>st.put(v))},
+  del(s,id){return this.tx(s,'readwrite',st=>st.delete(id))},
+};
+
+/* ---------------- Supabase data layer (same interface the app used for local storage) ---------------- */
+let sb=null;
+const REC_BUCKET='recordings',AUDIO_BUCKET='test-audio';
+const strip=o=>{const{audio,audioUrl,...rest}=o;return rest}; // never put blobs/signed URLs in the database
+async function must(p){const{data,error}=await p;if(error)throw error;return data}
+const DB={
+  async all(s){
+    if(s==='tests')return isAdmin?(await must(sb.from('tests').select('doc'))).map(r=>r.doc):(await must(sb.rpc('candidate_tests')))||[];
+    if(s==='submissions')return(await must(sb.from('submissions').select('doc').order('created_at',{ascending:false}))).map(r=>r.doc);
+    return[];
+  },
+  async get(s,id){
+    if(s==='kv'){if(id==='settings'){const r=await must(sb.from('settings').select('doc').eq('id','settings').maybeSingle());return r?.doc||null}return LocalDB.get('kv',id)}
+    if(s==='tests'){
+      const t=isAdmin?(await must(sb.from('tests').select('doc').eq('id',id).maybeSingle()))?.doc:await must(sb.rpc('candidate_test',{test_id:id}));
+      if(t&&t.audioPath){const{data}=await sb.storage.from(AUDIO_BUCKET).createSignedUrl(t.audioPath,3*3600);t.audioUrl=data?.signedUrl}
+      return t||null;
+    }
+    if(s==='submissions'){
+      const sub=(await must(sb.from('submissions').select('doc').eq('id',id).maybeSingle()))?.doc;
+      if(sub&&sub.audioPath){const{data}=await sb.storage.from(REC_BUCKET).download(sub.audioPath);if(data)sub.audio=data}
+      return sub||null;
+    }
+  },
+  async put(s,v){
+    if(s==='kv'){if(v.id==='settings')return must(sb.from('settings').upsert({id:'settings',doc:v}));return LocalDB.put('kv',v)}
+    if(s==='tests'){
+      if(v.audio instanceof Blob){const path=`${v.id}/${Date.now()}_${slug(v.audioName||'audio')}`;
+        await must(sb.storage.from(AUDIO_BUCKET).upload(path,v.audio,{contentType:v.audio.type||'audio/mpeg'}));
+        if(v.audioPath&&v.audioPath!==path)sb.storage.from(AUDIO_BUCKET).remove([v.audioPath]);v.audioPath=path}
+      return must(sb.from('tests').upsert({id:v.id,doc:strip(v)}));
+    }
+    if(s==='submissions'){
+      if(v.audio instanceof Blob&&!v.audioPath){const ext=(v.audio.type.match(/audio\/(\w+)/)||[,'webm'])[1];
+        const path=`${slug(v.testTitle)}/${stamp(v.submittedAt)}_${slug(v.name)}_${v.id}.${ext}`;
+        await must(sb.storage.from(REC_BUCKET).upload(path,v.audio,{contentType:v.audio.type||'audio/webm'}));v.audioPath=path}
+      const row={id:v.id,doc:strip(v)};
+      // Candidates may only insert; assessors may update.
+      return isAdmin?must(sb.from('submissions').upsert(row)):must(sb.from('submissions').insert(row));
+    }
+  },
+  async del(s,id){
+    const bucket=s==='submissions'?REC_BUCKET:AUDIO_BUCKET;
+    const doc=(await must(sb.from(s).select('doc').eq('id',id).maybeSingle()))?.doc;
+    if(doc?.audioPath)await sb.storage.from(bucket).remove([doc.audioPath]);
+    return must(sb.from(s).delete().eq('id',id));
+  },
+};
+async function checkAssessor(){
+  const{data:{session}}=await sb.auth.getSession();if(!session){isAdmin=false;return false}
+  const{data}=await sb.rpc('is_assessor');isAdmin=!!data;return isAdmin;
+}
+// Candidate upload with retry; if the network is down, hand the candidate local copies to give the assessor.
+async function submitSafely(sub){
+  for(;;){
+    try{await DB.put('submissions',sub);return true}
+    catch(e){
+      if(confirm(`Your answer could not be uploaded (${e.message||e}).\n\nCheck your internet connection, then press OK to try again.\nPress Cancel to download a copy to give to the assessor.`))continue;
+      downloadBlob(new Blob([JSON.stringify(strip(sub),null,2)],{type:'application/json'}),`submission_${slug(sub.name)}_${sub.id}.json`);
+      if(sub.audio instanceof Blob)downloadBlob(sub.audio,`recording_${slug(sub.name)}_${sub.id}.webm`);
+      return false;
+    }
+  }
+}
+const uploadingView=()=>setView('<div class="narrow"><div class="card done-card"><div class="spin"></div><h2>Submitting your answer…</h2><p class="muted">Please keep this page open.</p></div></div>');
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=s=>document.querySelector(s);
+const fmtTime=s=>{s=Math.max(0,Math.round(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+const fmtDate=t=>new Date(t).toLocaleString();
+
+const DEFAULT_SETTINGS={id:'settings',pin:'admin123',wordWeight:40,fieldWeight:60,passMark:85,ignoreCase:false,ignorePunct:false,audioFormat:'wav'};
+const SAMPLE_TEXT=`Escalation summary prepared for supervisor review. The member disputed the coinsurance applied to a recent specialist claim and requested a full benefit re-verification. The representative confirmed that the servicing provider terminated its network agreement mid plan year, which moved the claim to the out of network tier.
+
+Member Name: Rajesh Krishnamurthy
+Date of Birth: 09/02/1987
+Member ID: BCB4471TQ08
+Policy Number: POL-7734029-AZ
+Phone: (469) 555-0293
+Email: rajesh.krishnamurthy@meridiancare.org
+Servicing Provider: Crestline Orthopedic Associates
+Network Status: Out of Network
+Deductible: $2,000.00
+Coinsurance: 40%
+Specialist Copay: Not Applicable
+Out-of-Pocket Maximum: $12,400.00
+Original Authorization: PA-337482-M
+Corrected Authorization: AUTH-52190-R
+Reference Number: REF-40917AZ
+Effective Date: 03/15/2026
+Approved Amount: $2,918.75`;
+
+const SAMPLE_SPEAK=`Thank you for calling member services. Before we review your claim, I would like to explain how your plan handles visits to specialists. When you receive care from a provider inside your network, you usually pay a fixed copay, and the plan covers most of the remaining cost. However, if the provider leaves the network during the plan year, any visit after that date may be processed at the out of network level. In that case, you may be responsible for a larger share of the bill, including coinsurance and any amount above the allowed charge.
+
+I understand this can be frustrating, especially when you were not told about the change in advance. Many members only learn that a provider has left the network when the explanation of benefits arrives in the mail, and by then the visit has already taken place. Providers are expected to inform their patients when their agreement with the plan is ending, but that notice does not always reach everyone in time. Because of this, the plan has a process to look at situations like yours individually rather than applying the out of network rules automatically.
+
+What I can do today is request a formal review of the claim, confirm the exact date the provider's agreement ended, and check whether you qualify for continuity of care. If you are in the middle of an active course of treatment, such as physical therapy after surgery, ongoing care for a serious condition, or a pregnancy, the plan may allow you to keep seeing the same provider at the in network rate for a limited period. This period is usually up to ninety days, although it can be longer in certain cases. Your provider's office may also need to send supporting records, so I will make a note on your file to request them.
+
+While the review is in progress, you do not need to pay the balance shown on the provider's bill. I will place a hold on the account so that the amount is not sent to collections. The review normally takes between ten and fifteen business days. If the plan agrees that the claim should be processed at the in network level, it will be adjusted automatically, and both you and the provider will receive an updated statement showing the corrected amount. If the original decision is upheld, you will receive a letter that explains the reason and describes your right to file an appeal.
+
+In the meantime, there are a few steps you can take to avoid similar problems in the future. Before scheduling a new appointment, you can confirm a provider's network status by using the provider search tool on our website, or by calling the number on the back of your member card. It is a good idea to check again before each visit, because network agreements can change at any time during the year. If your doctor refers you to a specialist, ask the referral coordinator to confirm that the specialist is in network for your specific plan, not only for the insurance company in general.
+
+You may also want to review your summary of benefits, which explains your deductible, coinsurance, and out of pocket maximum. Once you reach the out of pocket maximum for the year, the plan pays one hundred percent of covered services for the rest of the plan year. Keeping copies of your bills and statements will make it easier to track your progress toward that limit.
+
+I will send you a written summary of everything we discussed today, along with a reference number, so you can follow up at any point. Is there anything else I can help you with before we end the call? Thank you for your patience, and have a good day.`;
+const SR_API=window.SpeechRecognition||window.webkitSpeechRecognition;
+const isSpeak=t=>t&&t.kind==='speak';
+// Speech-to-text output has unreliable case and punctuation, so speaking rounds ignore both and skip field scoring.
+const optsFor=t=>isSpeak(t)?{...settings,ignoreCase:true,ignorePunct:true,noFields:true}:settings;
+let settings, isAdmin=false;
+
+/* ---------------- Save recordings to a folder on disk (File System Access API, Chrome/Edge) ---------------- */
+const FS={
+  supported:'showDirectoryPicker' in window,
+  handle:null,
+  async load(){try{this.handle=(await DB.get('kv','folder'))?.handle||null}catch{this.handle=null}},
+  async pick(){const h=await window.showDirectoryPicker({id:'assessment-recordings',mode:'readwrite'});await DB.put('kv',{id:'folder',handle:h});this.handle=h;return h},
+  async status(){if(!this.handle)return'none';try{return await this.handle.queryPermission({mode:'readwrite'})}catch{return'none'}},
+  async ensure(ask){if(!this.handle)return false;const o={mode:'readwrite'};
+    try{if(await this.handle.queryPermission(o)==='granted')return true;if(!ask)return false;return(await this.handle.requestPermission(o))==='granted'}catch{return false}},
+  async write(dir,name,blob){const f=await dir.getFileHandle(name,{create:true});const w=await f.createWritable();await w.write(blob);await w.close()},
+};
+const slug=s=>String(s||'').trim().replace(/[^\p{L}\p{N}]+/gu,'-').replace(/^-+|-+$/g,'').slice(0,50)||'na';
+function stamp(t){const d=new Date(t),p=n=>String(n).padStart(2,'0');return`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`}
+async function toWav(blob,rate=22050){
+  const ctx=new (window.AudioContext||window.webkitAudioContext)();const audio=await ctx.decodeAudioData(await blob.arrayBuffer());ctx.close();
+  const off=new OfflineAudioContext(1,Math.max(1,Math.ceil(audio.duration*rate)),rate);const src=off.createBufferSource();src.buffer=audio;src.connect(off.destination);src.start();
+  const d=(await off.startRendering()).getChannelData(0);const v=new DataView(new ArrayBuffer(44+d.length*2));
+  const str=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};
+  str(0,'RIFF');v.setUint32(4,36+d.length*2,true);str(8,'WAVE');str(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
+  v.setUint32(24,rate,true);v.setUint32(28,rate*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);str(36,'data');v.setUint32(40,d.length*2,true);
+  for(let i=0;i<d.length;i++){const x=Math.max(-1,Math.min(1,d[i]));v.setInt16(44+i*2,x<0?x*0x8000:x*0x7fff,true)}
+  return new Blob([v],{type:'audio/wav'});
+}
+async function recordingFile(s){ // returns {blob,name}
+  const base=`${stamp(s.submittedAt)}_${slug(s.name)}${s.cid?'_'+slug(s.cid):''}`;
+  if(settings.audioFormat==='wav'){try{return{blob:await toWav(s.audio),name:base+'.wav',base}}catch(e){console.warn('WAV conversion failed, saving original',e)}}
+  const ext=(s.audio.type.match(/audio\/(\w+)/)||[,'webm'])[1].replace('mpeg','mp3');
+  return{blob:s.audio,name:`${base}.${ext}`,base};
+}
+function transcriptText(s){
+  return [`Candidate: ${s.name}`,`Candidate ID: ${s.cid||'-'}`,`Assessment: ${s.testTitle}`,`Submitted: ${new Date(s.submittedAt).toLocaleString()}`,
+    `Recording length: ${fmtTime(s.recDur||0)}`,`Attempts: ${s.plays}`,`Reading accuracy: ${s.wordAcc}%`,`Words per minute: ${s.wpm??'-'}`,
+    `Speech-to-text available: ${s.srAvailable===false?'no':'yes'}`,'','--- Transcript (speech-to-text) ---',s.answer||'(empty)'].join('\r\n');
+}
+// Writes <folder>/<assessment>/<date_name_id>.wav (+ .txt). Returns the relative path, or throws.
+async function saveRecording(s,ask=false){
+  if(!s.audio&&s.audioPath){const{data,error}=await sb.storage.from(REC_BUCKET).download(s.audioPath);if(error)throw error;s.audio=data}
+  if(!s.audio)throw new Error('no audio');
+  if(!(await FS.ensure(ask)))throw new Error('no folder access');
+  const dir=await FS.handle.getDirectoryHandle(slug(s.testTitle),{create:true});
+  const f=await recordingFile(s);await FS.write(dir,f.name,f.blob);
+  await FS.write(dir,f.base+'.txt',new Blob(['﻿'+transcriptText(s)],{type:'text/plain'}));
+  s.savedFile=`${FS.handle.name}/${slug(s.testTitle)}/${f.name}`;s.saveError=null;await DB.put('submissions',s);return s.savedFile;
+}
+function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),5000)}
+async function getSettings(){settings={...DEFAULT_SETTINGS,...(await DB.get('kv','settings')||{})};return settings}
+
+/* ---------------- Scoring ---------------- */
+function normTok(t,opt){let k=t;if(opt.ignoreCase)k=k.toLowerCase();if(opt.ignorePunct)k=k.replace(/[^\p{L}\p{N}]/gu,'');return k}
+function tokens(text,opt){return text.split(/\s+/).filter(Boolean).map(raw=>({raw,key:normTok(raw,opt)})).filter(t=>t.key!=='')}
+// Word-level alignment (Levenshtein with backtrace)
+function align(ref,hyp){
+  const n=ref.length,m=hyp.length,W=m+1;const d=new Uint32Array((n+1)*W);
+  for(let i=0;i<=n;i++)d[i*W]=i;for(let j=0;j<=m;j++)d[j]=j;
+  for(let i=1;i<=n;i++)for(let j=1;j<=m;j++){const c=ref[i-1].key===hyp[j-1].key?0:1;
+    d[i*W+j]=Math.min(d[(i-1)*W+j-1]+c,d[(i-1)*W+j]+1,d[i*W+j-1]+1)}
+  const ops=[];let i=n,j=m;
+  while(i>0||j>0){
+    if(i>0&&j>0&&d[i*W+j]===d[(i-1)*W+j-1]+(ref[i-1].key===hyp[j-1].key?0:1)){ops.push({t:ref[i-1].key===hyp[j-1].key?'eq':'sub',r:ref[i-1],h:hyp[j-1]});i--;j--}
+    else if(i>0&&d[i*W+j]===d[(i-1)*W+j]+1){ops.push({t:'del',r:ref[i-1]});i--}
+    else{ops.push({t:'ins',h:hyp[j-1]});j--}
+  }
+  return ops.reverse();
+}
+function charSim(a,b){ // 0..100 similarity by character edit distance
+  if(!a&&!b)return 100;const n=a.length,m=b.length;let prev=Array.from({length:m+1},(_,j)=>j);
+  for(let i=1;i<=n;i++){const cur=[i];for(let j=1;j<=m;j++)cur[j]=Math.min(prev[j-1]+(a[i-1]===b[j-1]?0:1),prev[j]+1,cur[j-1]+1);prev=cur}
+  return Math.round(100*(1-prev[m]/Math.max(n,m)));
+}
+const FIELD_RE=/^\s*([A-Za-z][A-Za-z0-9 .\-/&()']{0,60}?)\s*:\s*(.+?)\s*$/;
+function parseFields(text){const out=[];for(const line of text.split(/\r?\n/)){const mm=line.match(FIELD_RE);if(mm)out.push({key:mm[1].trim(),value:mm[2].replace(/\s+/g,' ').trim()})}return out}
+const keyNorm=k=>k.toLowerCase().replace(/[^a-z0-9]/g,'');
+function score(refText,hypText,opt){
+  const ref=tokens(refText,opt),hyp=tokens(hypText,opt);const ops=align(ref,hyp);
+  const c={eq:0,sub:0,del:0,ins:0};ops.forEach(o=>c[o.t]++);
+  const N=ref.length||1;const wordAcc=Math.max(0,Math.round(1000*(N-c.sub-c.del-c.ins)/N)/10);
+  const refF=opt.noFields?[]:parseFields(refText),hypF=parseFields(hypText);const used=new Set();
+  const fields=refF.map(f=>{
+    const idx=hypF.findIndex((h,i)=>!used.has(i)&&keyNorm(h.key)===keyNorm(f.key));
+    if(idx<0)return{...f,typed:null,status:'missing',sim:0};
+    used.add(idx);const typed=hypF[idx].value;
+    let a=f.value,b=typed;if(opt.ignoreCase){a=a.toLowerCase();b=b.toLowerCase()}
+    if(a===b)return{...f,typed,status:'correct',sim:100};
+    const caseOnly=a.toLowerCase()===b.toLowerCase();
+    return{...f,typed,status:caseOnly?'case':'wrong',sim:charSim(a,b)};
+  });
+  const fc=fields.filter(f=>f.status==='correct').length;
+  const fieldAcc=fields.length?Math.round(1000*fc/fields.length)/10:null;
+  let auto;
+  if(fieldAcc===null)auto=wordAcc;
+  else{const tw=(+opt.wordWeight)+(+opt.fieldWeight)||1;auto=Math.round(10*(wordAcc*opt.wordWeight+fieldAcc*opt.fieldWeight)/tw)/10}
+  return{ops,counts:c,refWords:ref.length,typedWords:hyp.length,wordAcc,fields,fieldCorrect:fc,fieldAcc,auto};
+}
+
+/* ---------------- Audio players ---------------- */
+let voices=[];
+function loadVoices(){voices=speechSynthesis.getVoices();return voices}
+if('speechSynthesis' in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
+function splitChunks(text){return text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean).flatMap(l=>l.split(/(?<=[.!?])\s+(?=[A-Z])/)).filter(Boolean)}
+class TTSPlayer{
+  constructor(test,{onProgress,onEnd}){this.chunks=splitChunks(test.text);this.test=test;this.onProgress=onProgress;this.onEnd=onEnd;this.state='idle'}
+  play(){speechSynthesis.cancel();this.i=0;this.token={};this.state='playing';this.onProgress(0);this._next(this.token)}
+  _next(tok){
+    if(tok!==this.token)return;
+    if(this.i>=this.chunks.length){this.state='idle';this.onProgress(1);this.onEnd();return}
+    const u=new SpeechSynthesisUtterance(this.chunks[this.i]);
+    const v=voices.find(v=>v.voiceURI===this.test.voiceURI);if(v)u.voice=v;
+    u.rate=+this.test.rate||1;u.lang=v?.lang||'en-US';
+    u.onend=()=>{if(tok!==this.token)return;this.i++;this.onProgress(this.i/this.chunks.length);setTimeout(()=>this._next(tok),Math.round((+this.test.gap||0.4)*1000))};
+    u.onerror=u.onend;speechSynthesis.speak(u);
+  }
+  pause(){speechSynthesis.pause();this.state='paused'}
+  resume(){speechSynthesis.resume();this.state='playing'}
+  stop(){this.token={};speechSynthesis.cancel();this.state='idle'}
+}
+class FilePlayer{
+  constructor(test,{onProgress,onEnd}){this.a=new Audio(test.audio instanceof Blob?URL.createObjectURL(test.audio):test.audioUrl);this.a.playbackRate=+test.rate||1;this.state='idle';
+    this.a.ontimeupdate=()=>onProgress(this.a.duration?this.a.currentTime/this.a.duration:0);this.a.onended=()=>{this.state='idle';onProgress(1);onEnd()}}
+  play(){this.a.currentTime=0;this.a.play();this.state='playing'}
+  pause(){this.a.pause();this.state='paused'}
+  resume(){this.a.play();this.state='playing'}
+  stop(){this.a.pause();this.state='idle'}
+}
+
+/* ---------------- Views ---------------- */
+let cleanup=null;
+function setView(html){if(cleanup){cleanup();cleanup=null}$('#app').innerHTML=html;renderHeader()}
+function renderHeader(){$('#hdr').innerHTML=isAdmin?`<span class="pill ok">Assessor</span><button class="small" onclick="logout()">Log out</button>`:''}async function logout(){await sb.auth.signOut();isAdmin=false;adminLogin()}
+
+// Candidates only ever see the candidate flow. Assessors open the private link <site>/#assessor.
+const wantsAdmin=()=>/^#\/?(assessor|admin)$/i.test(location.hash);
+function home(){if(wantsAdmin()||isAdmin)return adminLogin();candidateStart()}
+window.addEventListener('hashchange',()=>{if(!document.querySelector('#timer'))home()});
+function steps(n){const L=['Your details','Instructions','Assessment','Done'];
+  return`<div class="steps">${L.map((l,i)=>`<span class="${i+1===n?'on':i+1<n?'done':''}"><b>${i+1<n?'✓':i+1}</b>${l}</span>`).join('')}</div>`}
+const ICON={
+  browser:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/></svg>',
+  head:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14v-2a9 9 0 0 1 18 0v2"/><rect x="2" y="14" width="5" height="7" rx="2"/><rect x="17" y="14" width="5" height="7" rx="2"/></svg>',
+  quiet:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4"/></svg>'};
+
+/* ----- Candidate ----- */
+async function candidateStart(){
+  const tests=(await DB.all('tests')).filter(t=>t.active);
+  setView(`<div class="narrow">
+    <div class="lede"><h2>Welcome to your assessment</h2><p>Enter your details to begin. The whole assessment takes place on this page. Please don't close or refresh it.</p></div>
+    ${steps(1)}
+    <div class="card">
+      ${tests.length?'':'<div class="notice">There is no assessment open right now. Please check with your assessor.</div>'}
+      <label style="margin-top:0">Full name</label><input type="text" id="cName" autocomplete="name" placeholder="e.g. Priya Sharma">
+      <label>Candidate ID or email</label><input type="text" id="cId" autocomplete="off" placeholder="As given in your invitation">
+      <label>Assessment</label><select id="cTest">${tests.map(t=>`<option value="${t.id}">${esc(t.title)}</option>`).join('')}</select>
+      <div class="row" style="margin-top:22px"><span class="spacer"></span><button class="primary big" ${tests.length?'':'disabled'} onclick="candidateInstructions()">Continue →</button></div>
+    </div>
+    <div class="reqs">
+      <div class="req">${ICON.browser}<div><b>Chrome or Edge</b>On a laptop or desktop</div></div>
+      <div class="req">${ICON.head}<div><b>Headphones</b>Check your volume first</div></div>
+      <div class="req">${ICON.quiet}<div><b>Quiet room</b>Microphone needed for speaking tasks</div></div>
+    </div>
+  </div>`);
+  const n=$('#cName');if(n){n.focus();n.onkeydown=e=>{if(e.key==='Enter')$('#cId').focus()}}
+}
+async function candidateInstructions(){
+  const name=$('#cName').value.trim(),cid=$('#cId').value.trim(),tid=$('#cTest').value;
+  if(!name){alert('Please enter your name.');return}
+  const t=await DB.get('tests',tid);
+  setView(`<div class="narrow">${steps(2)}<div class="card">
+    <div class="row" style="margin-bottom:4px"><h2 style="margin:0">${esc(t.title)}</h2><span class="spacer"></span>
+      <span class="pill ${isSpeak(t)?'warn':'ok'}">${isSpeak(t)?'Speaking':'Listening & typing'}</span></div>
+    <p class="muted small" style="margin:0 0 6px">Hello ${esc(name)}, please read these instructions carefully before you start.</p>
+    ${isSpeak(t)?`<ul class="rules">
+      <li>You will see a passage on screen. Press <b>Start recording</b> and read the whole passage <b>aloud</b>, clearly and at a natural pace.</li>
+      <li>Press <b>Stop</b> when you finish. Your voice is recorded and converted to text automatically.</li>
+      <li>You can record <b>${t.maxPlays>0?t.maxPlays+' time(s)':'as many times as you like'}</b>. Only your <b>last</b> recording is submitted.</li>
+      <li>Time limit: <b>${t.timeLimit>0?t.timeLimit+' minutes':'none'}</b>.</li>
+      <li>Your browser will ask for permission to use the microphone. Choose <b>Allow</b>.</li>
+      <li>Sit somewhere quiet and use a headset microphone if you have one.</li>
+    </ul>
+    ${SR_API?'':'<div class="notice">This browser cannot convert speech to text. Your recording will still be saved and the assessor will review it. Chrome or Edge is recommended.</div>'}`:`<ul class="rules">
+      <li>You will hear an audio recording. Type <b>exactly</b> what you hear: spelling, numbers, punctuation and formatting all count.</li>
+      <li>Type each detail on its own line in the form <span class="mono">Field Name: Value</span>, as you hear it read out.</li>
+      <li>You can play the audio <b>${t.maxPlays>0?t.maxPlays+' time(s)':'as many times as you like'}</b>.${t.allowPause?' You can pause and resume.':' Pausing is not allowed.'}</li>
+      <li>Time limit: <b>${t.timeLimit>0?t.timeLimit+' minutes':'none'}</b>. ${t.timeLimit>0?'Your answer is submitted automatically when the time runs out.':''}</li>
+      <li>Pasting is disabled. Do not switch tabs or windows; this is recorded.</li>
+      <li>Use headphones and check your volume before you start.</li>
+    </ul>`}
+    <div class="row" style="margin-top:22px"><button onclick="candidateStart()">← Back</button><span class="spacer"></span><button class="primary big" id="go">I'm ready, start</button></div>
+  </div></div>`);
+  // The click is a user gesture, so the browser can re-confirm folder access here if it lapsed.
+  $('#go').onclick=()=>runTest(t,{name,cid});
+}
+function runSpeakTest(t,cand){
+  const started=Date.now();let attempts=0,blurs=0,submitted=false,recording=false,srFailed=!SR_API;
+  let rec=null,mr=null,stream=null,chunks=[],finalText='',interim='',recStart=0,recDur=0,audioBlob=null,stopping=null;
+  setView(`
+  <div class="card">
+    <div class="row"><h2 style="margin:0">${esc(t.title)}</h2><span class="spacer"></span><span class="muted small">${esc(cand.name)}</span>
+      <span class="timer" id="timer">${t.timeLimit>0?fmtTime(t.timeLimit*60):'00:00'}</span></div>
+    <p class="muted small" style="margin:6px 0 12px">Read the passage below aloud.</p>
+    <div class="passage">${esc(t.text)}</div>
+  </div>
+  <div class="card">
+    <div class="player">
+      <button class="primary" id="recBtn">● Start recording</button>
+      <span id="recStatus" class="small muted">Not recording</span><span class="spacer"></span>
+      <span class="small muted" id="attCount"></span>
+    </div>
+    <label>${t.showLive!==false?'What the computer heard':'Status'}</label>
+    <div class="live" id="live"><span class="muted">Your words will appear here as you speak.</span></div>
+    <div class="row" style="margin-top:12px"><span class="small muted" id="wc"></span><span class="spacer"></span><button class="primary" id="submit" disabled>Submit recording</button></div>
+  </div>`);
+  const recBtn=$('#recBtn'),live=$('#live'),status=$('#recStatus');
+  const ui=()=>{const left=t.maxPlays>0?t.maxPlays-attempts:Infinity;
+    $('#attCount').textContent=t.maxPlays>0?`Attempts used: ${attempts} / ${t.maxPlays}`:`Attempts: ${attempts}`;
+    recBtn.textContent=recording?'■ Stop':(attempts?'● Record again':'● Start recording');
+    recBtn.disabled=!!stopping||(!recording&&left<=0);
+    $('#submit').disabled=recording||!!stopping||!attempts;
+    status.innerHTML=recording?'<span class="recdot"></span>Recording…':stopping?'Finishing…':attempts?`Recorded ${fmtTime(recDur)}`:'Not recording';
+    const wc=finalText.trim().split(/\s+/).filter(Boolean).length;$('#wc').textContent=attempts?`${wc} words recognised`:''};
+  const showLive=()=>{if(t.showLive===false){live.innerHTML=recording?'<span class="muted">Listening…</span>':'<span class="muted">Recording saved.</span>';return}
+    live.innerHTML=esc(finalText)+'<span class="interim">'+esc(interim)+'</span>'||'<span class="muted">Listening…</span>';live.scrollTop=live.scrollHeight};
+  function startSR(){
+    rec=new SR_API();rec.lang=t.lang||'en-US';rec.continuous=true;rec.interimResults=true;
+    rec.onresult=e=>{interim='';for(let i=e.resultIndex;i<e.results.length;i++){const r=e.results[i];if(r.isFinal)finalText+=r[0].transcript.trim()+' ';else interim+=r[0].transcript}showLive()};
+    rec.onerror=e=>{if(['not-allowed','service-not-allowed','network','language-not-supported'].includes(e.error)){srFailed=true;
+      live.innerHTML=`<span class="muted">Speech-to-text unavailable (${esc(e.error)}). Keep reading: your audio is still being recorded for the assessor.</span>`}};
+    rec.onend=()=>{if(recording&&!srFailed){try{rec.start()}catch{}}else if(rec._done)rec._done()};
+    try{rec.start()}catch{}
+  }
+  async function start(){
+    if(t.maxPlays>0&&attempts>=t.maxPlays)return;
+    try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}
+    catch(e){alert('Microphone access is needed for this assessment. Allow the microphone in your browser and try again.');return}
+    attempts++;finalText='';interim='';chunks=[];audioBlob=null;recording=true;recStart=Date.now();
+    mr=new MediaRecorder(stream);mr.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};mr.start(1000);
+    if(!srFailed)startSR();
+    live.innerHTML='<span class="muted">Listening…</span>';ui();
+  }
+  function stop(){
+    if(!recording)return stopping||Promise.resolve();
+    recording=false;recDur=(Date.now()-recStart)/1000;
+    const pMr=new Promise(res=>{mr.onstop=()=>{audioBlob=new Blob(chunks,{type:mr.mimeType||'audio/webm'});res()};mr.stop()});
+    const pSr=new Promise(res=>{if(!rec||srFailed)return res();rec._done=res;try{rec.stop()}catch{res()}setTimeout(res,3000)});
+    stopping=Promise.all([pMr,pSr]).then(()=>{stream.getTracks().forEach(x=>x.stop());if(interim){finalText+=interim+' ';interim=''}stopping=null;showLive();ui()});
+    ui();return stopping;
+  }
+  recBtn.onclick=()=>recording?stop():start();
+  const onBlur=()=>{if(!submitted)blurs++};window.addEventListener('blur',onBlur);
+  const onUnload=e=>{if(!submitted){e.preventDefault();e.returnValue=''}};window.addEventListener('beforeunload',onUnload);
+  const tick=setInterval(()=>{const el=(Date.now()-started)/1000;const tm=$('#timer');if(!tm)return;
+    if(recording)status.innerHTML=`<span class="recdot"></span>Recording… ${fmtTime((Date.now()-recStart)/1000)}`;
+    if(t.timeLimit>0){const left=t.timeLimit*60-el;tm.textContent=fmtTime(left);tm.classList.toggle('low',left<=60);if(left<=0)finish(true)}
+    else tm.textContent=fmtTime(el)},500);
+  cleanup=()=>{clearInterval(tick);recording=false;try{rec&&rec.abort()}catch{}try{mr&&mr.state!=='inactive'&&mr.stop()}catch{}stream&&stream.getTracks().forEach(x=>x.stop());
+    window.removeEventListener('blur',onBlur);window.removeEventListener('beforeunload',onUnload)};
+  async function finish(auto){
+    if(submitted)return;
+    if(!auto&&!confirm('Submit your last recording? You cannot change it afterwards.'))return;
+    submitted=true;await stop();
+    const text=finalText.trim();
+    const sub={id:uid(),kind:'speak',testId:t.id,testTitle:t.title,name:cand.name,cid:cand.cid,answer:text,asrOriginal:text,audio:audioBlob,recDur:Math.round(recDur),
+      srAvailable:!srFailed,startedAt:started,submittedAt:Date.now(),durationSec:Math.round((Date.now()-started)/1000),plays:attempts,blurs,pasteAttempts:0,
+      autoSubmitted:!!auto,finalScore:null,decision:'',notes:'',rubric:{}};
+    const s=score(t.text,text,optsFor(t));sub.auto=s.auto;sub.wordAcc=s.wordAcc;sub.fieldAcc=null;
+    sub.wpm=recDur>0?Math.round(s.typedWords/(recDur/60)):null;
+    uploadingView();const ok=await submitSafely(sub);
+    setView(`<div class="narrow">${steps(4)}<div class="card done-card"><div class="done-icon">✓</div>
+      ${ok?'':'<div class="notice">The upload failed. Your answer and recording were downloaded to this computer. Please give those files to the assessor.</div>'}
+      <h2>${auto?'Time is up: your recording was submitted':'Recording submitted'}</h2>
+      <p class="muted">Thank you, ${esc(cand.name)}. Your response has been recorded for review.</p>
+      ${t.showResult?`<div class="stats" style="text-align:left"><div class="stat"><div class="v">${s.wordAcc}%</div><div class="k">Reading accuracy</div></div>
+        <div class="stat"><div class="v">${sub.wpm??'-'}</div><div class="k">Words per minute</div></div></div>`:''}
+      <p class="small muted" style="margin-top:18px">You can now close this page.</p></div></div>`);
+  }
+  $('#submit').onclick=()=>finish(false);
+  ui();
+}
+function runTest(t,cand){
+  if(isSpeak(t))return runSpeakTest(t,cand);
+  const started=Date.now();let plays=0,blurs=0,pasteAttempts=0,submitted=false;
+  setView(`
+  <div class="card">
+    <div class="row"><h2 style="margin:0">${esc(t.title)}</h2><span class="spacer"></span>
+      <span class="muted small">${esc(cand.name)}</span>
+      ${t.timeLimit>0?`<span class="timer" id="timer">${fmtTime(t.timeLimit*60)}</span>`:`<span class="timer" id="timer">00:00</span>`}</div>
+    <div class="player" style="margin-top:14px">
+      <button class="primary" id="pPlay">▶ Play</button>
+      <button id="pPause" disabled>Pause</button>
+      <div class="bar"><div id="pBar"></div></div>
+      <span class="small muted" id="pCount"></span>
+    </div>
+  </div>
+  <div class="card">
+    <label for="ans" style="margin-top:0">Your transcription</label>
+    <textarea id="ans" class="answer" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Start typing here…"></textarea>
+    <div class="row" style="margin-top:12px"><span class="small muted" id="wc">0 words</span><span class="spacer"></span><button class="primary" id="submit">Submit answer</button></div>
+  </div>`);
+  const playBtn=$('#pPlay'),pauseBtn=$('#pPause'),bar=$('#pBar'),cnt=$('#pCount'),ans=$('#ans');
+  const updCount=()=>{cnt.textContent=t.maxPlays>0?`Plays used: ${plays} / ${t.maxPlays}`:`Plays: ${plays}`;
+    playBtn.disabled=(t.maxPlays>0&&plays>=t.maxPlays)||player.state!=='idle'};
+  const player=(t.mode==='file'&&(t.audio||t.audioUrl)?new FilePlayer(t,{onProgress:p=>bar.style.width=(p*100)+'%',onEnd:()=>{pauseBtn.disabled=true;updCount()}})
+    :new TTSPlayer(t,{onProgress:p=>bar.style.width=(p*100)+'%',onEnd:()=>{pauseBtn.disabled=true;updCount()}}));
+  updCount();
+  playBtn.onclick=()=>{if(t.maxPlays>0&&plays>=t.maxPlays)return;plays++;player.play();pauseBtn.disabled=!t.allowPause;pauseBtn.textContent='Pause';updCount();ans.focus()};
+  pauseBtn.onclick=()=>{if(player.state==='playing'){player.pause();pauseBtn.textContent='Resume'}else if(player.state==='paused'){player.resume();pauseBtn.textContent='Pause'}ans.focus()};
+  ans.addEventListener('paste',e=>{e.preventDefault();pasteAttempts++});
+  ans.addEventListener('drop',e=>{e.preventDefault();pasteAttempts++});
+  ans.addEventListener('input',()=>{$('#wc').textContent=(ans.value.trim().split(/\s+/).filter(Boolean).length)+' words'});
+  const onBlur=()=>{if(!submitted)blurs++};window.addEventListener('blur',onBlur);
+  const onUnload=e=>{if(!submitted){e.preventDefault();e.returnValue=''}};window.addEventListener('beforeunload',onUnload);
+  const tick=setInterval(()=>{const el=(Date.now()-started)/1000;const tm=$('#timer');if(!tm)return;
+    if(t.timeLimit>0){const left=t.timeLimit*60-el;tm.textContent=fmtTime(left);tm.classList.toggle('low',left<=60);if(left<=0)finish(true)}
+    else tm.textContent=fmtTime(el)},500);
+  cleanup=()=>{clearInterval(tick);player.stop();window.removeEventListener('blur',onBlur);window.removeEventListener('beforeunload',onUnload)};
+  async function finish(auto){
+    if(submitted)return;
+    if(!auto&&!confirm('Submit your answer? You cannot change it afterwards.'))return;
+    submitted=true;const text=ans.value;
+    const sub={id:uid(),testId:t.id,testTitle:t.title,name:cand.name,cid:cand.cid,answer:text,startedAt:started,submittedAt:Date.now(),
+      durationSec:Math.round((Date.now()-started)/1000),plays,blurs,pasteAttempts,autoSubmitted:!!auto,finalScore:null,decision:'',notes:''};
+    // For uploaded-audio passages the answer key is never sent to the candidate, so scoring happens on the assessor side.
+    const s=t.text?score(t.text,text,settings):null;sub.auto=s?.auto??null;sub.wordAcc=s?.wordAcc??null;sub.fieldAcc=s?.fieldAcc??null;
+    uploadingView();const ok=await submitSafely(sub);
+    setView(`<div class="narrow">${steps(4)}<div class="card done-card"><div class="done-icon">✓</div>
+      ${ok?'':'<div class="notice">The upload failed. Your answer was downloaded to this computer. Please give that file to the assessor.</div>'}
+      <h2>${auto?'Time is up: your answer was submitted':'Answer submitted'}</h2>
+      <p class="muted">Thank you, ${esc(cand.name)}. Your response has been recorded for review.</p>
+      ${t.showResult&&s?`<div class="stats" style="text-align:left"><div class="stat"><div class="v">${s.auto}%</div><div class="k">Score</div></div>
+        <div class="stat"><div class="v">${s.wordAcc}%</div><div class="k">Word accuracy</div></div>
+        ${s.fieldAcc!==null?`<div class="stat"><div class="v">${s.fieldCorrect}/${s.fields.length}</div><div class="k">Fields correct</div></div>`:''}</div>`:''}
+      <p class="small muted" style="margin-top:18px">You can now close this page.</p></div></div>`);
+  }
+  $('#submit').onclick=()=>finish(false);
+}
+
+/* ----- Admin ----- */
+async function adminLogin(){
+  if(await checkAssessor())return adminView('subs');
+  setView(`<div class="card" style="max-width:420px;margin:24px auto 0"><h2>Assessor sign in</h2>
+    <label>Email</label><input type="text" id="em" autocomplete="username">
+    <label>Password</label><input type="password" id="pw" autocomplete="current-password">
+    <p class="small muted">Assessor accounts are created in Supabase (Authentication → Users), and the email must be listed in the <span class="mono">assessors</span> table.</p>
+    <div class="row"><span class="spacer"></span><button class="primary" id="lg" style="width:100%">Sign in</button></div></div>`);
+  const go=async()=>{$('#lg').disabled=true;
+    const{error}=await sb.auth.signInWithPassword({email:$('#em').value.trim(),password:$('#pw').value});
+    if(error){$('#lg').disabled=false;alert('Login failed: '+error.message);return}
+    if(await checkAssessor())adminView('subs');
+    else{await sb.auth.signOut();$('#lg').disabled=false;alert('This account is not an assessor. Add its email to the assessors table in Supabase.')}};
+  $('#lg').onclick=go;$('#pw').onkeydown=e=>{if(e.key==='Enter')go()};$('#em').focus();
+}
+async function adminView(tab){
+  if(!isAdmin)return home();
+  setView(`<div class="tabs">
+    <button class="${tab==='subs'?'on':''}" onclick="adminView('subs')">Submissions</button>
+    <button class="${tab==='tests'?'on':''}" onclick="adminView('tests')">Audio passages</button>
+    <button class="${tab==='settings'?'on':''}" onclick="adminView('settings')">Scoring & settings</button></div><div id="tab"></div>`);
+  if(tab==='subs')renderSubs();if(tab==='tests')renderTests();if(tab==='settings')renderSettings();
+}
+function scorePill(v){if(v==null)return'<span class="pill miss">-</span>';return`<span class="pill ${v>=settings.passMark?'ok':v>=settings.passMark-15?'warn':'bad'}">${v}%</span>`}
+async function renderSubs(){
+  const subs=(await DB.all('submissions')).sort((a,b)=>b.submittedAt-a.submittedAt);
+  const tests=await DB.all('tests');
+  // Score anything the candidate's browser could not score (e.g. uploaded-audio passages, whose answer key stays server-side).
+  for(const s of subs){if(s.wordAcc==null&&s.answer!=null){const t=tests.find(x=>x.id===s.testId);if(t){const r=score(t.text,s.answer,optsFor(t));
+    s.auto=r.auto;s.wordAcc=r.wordAcc;s.fieldAcc=r.fieldAcc;DB.put('submissions',s).catch(()=>{})}}}
+  const fst=await FS.status();const unsaved=subs.filter(s=>s.kind==='speak'&&s.audioPath&&!s.savedFile).length;
+  const folderBar=!FS.supported?'':fst==='none'?`<div class="notice">Recordings are stored in Supabase. To also keep copies on this computer, <a href="#" onclick="adminView('settings');return false">choose a download folder</a>.</div>`
+    :fst!=='granted'?`<div class="notice">The browser needs permission again to save into <b>${esc(FS.handle.name)}</b>. <button class="small" id="reconn">Reconnect folder</button></div>`
+    :unsaved?`<div class="notice">${unsaved} recording(s) are not yet saved to <b>${esc(FS.handle.name)}</b>. <button class="small" id="saveAll">Save them now</button></div>`:'';
+  $('#tab').innerHTML=`${folderBar}<div class="card">
+    <div class="row" style="margin-bottom:10px"><h3 style="margin:0">Submissions (${subs.length})</h3><span class="spacer"></span>
+      <select id="fTest" style="width:auto"><option value="">All assessments</option>${tests.map(t=>`<option value="${t.id}">${esc(t.title)}</option>`).join('')}</select>
+      <button class="small" onclick="exportCSV()">Export CSV</button></div>
+    ${subs.length?`<div style="overflow-x:auto"><table><thead><tr><th>Candidate</th><th>Assessment</th><th>Submitted</th><th>Time</th><th>Words</th><th>Fields</th><th>Auto</th><th>Final</th><th>Decision</th><th></th></tr></thead>
+    <tbody id="subRows">${subs.map(s=>`<tr data-test="${s.testId}"><td><b>${esc(s.name)}</b><div class="small muted">${esc(s.cid)}</div></td><td>${esc(s.testTitle)}<div><span class="pill ${s.kind==='speak'?'warn':'miss'} kind">${s.kind==='speak'?'Read aloud':'Listen & type'}</span></div></td>
+      <td class="small">${fmtDate(s.submittedAt)}</td><td>${fmtTime(s.durationSec)}${s.autoSubmitted?' <span class="pill warn">timeout</span>':''}</td>
+      <td>${s.wordAcc}%</td><td>${s.fieldAcc??'-'}${s.fieldAcc!=null?'%':''}</td><td>${scorePill(s.auto)}</td><td>${s.finalScore!=null?scorePill(s.finalScore):'<span class="muted small">-</span>'}</td>
+      <td>${s.decision?`<span class="pill ${s.decision==='Pass'?'ok':s.decision==='Fail'?'bad':'warn'}">${esc(s.decision)}</span>`:'<span class="muted small">Pending</span>'}</td>
+      <td><button class="small primary" onclick="reviewSub('${s.id}')">Review</button></td></tr>`).join('')}</tbody></table></div>`
+    :'<p class="muted">No submissions yet.</p>'}</div>`;
+  if($('#reconn'))$('#reconn').onclick=async()=>{await FS.ensure(true);renderSubs()};
+  if($('#saveAll'))$('#saveAll').onclick=()=>saveAllRecordings().then(renderSubs);
+  const f=$('#fTest');if(f)f.onchange=()=>document.querySelectorAll('#subRows tr').forEach(r=>r.style.display=!f.value||r.dataset.test===f.value?'':'none');
+}
+function renderDiff(ops){
+  let out='';
+  for(const o of ops){
+    if(o.t==='eq')out+=esc(o.h.raw)+' ';
+    else if(o.t==='sub')out+=`<span class="sub" title="Typed">${esc(o.h.raw)}</span><span class="exp" title="Expected">${esc(o.r.raw)}</span> `;
+    else if(o.t==='del')out+=`<span class="del" title="Missing">${esc(o.r.raw)}</span> `;
+    else out+=`<span class="ins" title="Extra">${esc(o.h.raw)}</span> `;
+  }
+  return out;
+}
+async function reviewSub(id){
+  const s=await DB.get('submissions',id);const t=await DB.get('tests',s.testId);
+  const ref=t?t.text:(s.refSnapshot||'');const sp=s.kind==='speak';const r=score(ref,s.answer,optsFor(t||{kind:s.kind}));
+  const wpm=sp&&s.recDur?Math.round(r.typedWords/(s.recDur/60)):null;
+  const audioUrl=sp&&s.audio?URL.createObjectURL(s.audio):null;
+  const rub=s.rubric||{};const rubSel=k=>`<select id="rb_${k}"><option value="">-</option>${[1,2,3,4,5].map(n=>`<option ${rub[k]==n?'selected':''}>${n}</option>`).join('')}</select>`;
+  const statusPill={correct:'<span class="pill ok">Correct</span>',wrong:'<span class="pill bad">Wrong</span>',case:'<span class="pill warn">Case only</span>',missing:'<span class="pill miss">Missing</span>'};
+  const dlg=$('#dlg');
+  dlg.innerHTML=`<div class="dlg-head"><div><b>${esc(s.name)}</b> <span class="muted small">${esc(s.cid)} · ${esc(s.testTitle)} · ${fmtDate(s.submittedAt)}</span></div><span class="spacer"></span><button class="small" onclick="$('#dlg').close()">Close</button></div>
+  <div class="dlg-body">
+    ${t?'':'<div class="notice">The original passage was deleted; scores shown are from submission time.</div>'}
+    ${sp?`<h3>Recording</h3>${audioUrl?`<audio controls src="${audioUrl}" style="width:100%"></audio>
+      <div class="row small" style="margin-top:6px"><button class="small" id="rDl">Download recording</button>
+        ${FS.supported?`<button class="small" id="rSaveF">${s.savedFile?'Save to folder again':'Save to folder'}</button>`:''}
+        <span class="muted" id="rSavedAt">${s.savedFile?'Saved: <span class="mono">'+esc(s.savedFile)+'</span>':s.saveError?'<span style="color:var(--bad)">Not saved to folder ('+esc(s.saveError)+')</span>':''}</span></div>`:'<p class="muted">No audio was captured.</p>'}
+      ${s.srAvailable===false?'<div class="notice" style="margin-top:8px">Speech-to-text was unavailable for this candidate. Listen to the recording, type what they said into the transcript box below, then press Re-score.</div>':''}<br>`:''}
+    <div class="stats">
+      ${sp?'':`<div class="stat"><div class="v">${r.auto}%</div><div class="k">Auto score</div></div>`}
+      <div class="stat"><div class="v">${r.wordAcc}%</div><div class="k">${sp?'Reading accuracy':'Word accuracy'}</div></div>
+      ${sp?`<div class="stat"><div class="v">${wpm??'-'}</div><div class="k">Words per minute</div></div><div class="stat"><div class="v">${fmtTime(s.recDur||0)}</div><div class="k">Recording length</div></div>`:''}
+      ${r.fieldAcc!==null?`<div class="stat"><div class="v">${r.fieldCorrect}/${r.fields.length}</div><div class="k">Fields exact</div></div>`:''}
+      <div class="stat"><div class="v">${r.counts.sub}/${r.counts.del}/${r.counts.ins}</div><div class="k">Wrong / missing / extra words</div></div>
+      <div class="stat"><div class="v">${fmtTime(s.durationSec)}</div><div class="k">Time taken${s.autoSubmitted?' (timed out)':''}</div></div>
+      <div class="stat"><div class="v">${s.plays}</div><div class="k">${sp?'Recording attempts':'Audio plays'}</div></div>
+      <div class="stat"><div class="v" style="color:${s.blurs?'var(--bad)':'inherit'}">${s.blurs}</div><div class="k">Left the window</div></div>
+      ${sp?'':`<div class="stat"><div class="v" style="color:${s.pasteAttempts?'var(--bad)':'inherit'}">${s.pasteAttempts}</div><div class="k">Paste attempts</div></div>`}
+    </div>
+    ${sp?`<p class="small muted" style="margin-top:-6px">Case and punctuation are ignored for read-aloud rounds. Speech recognition can write numbers as digits or words, so check those differences by ear.</p>`:''}
+    ${r.fields.length?`<h3>Field check</h3><div style="overflow-x:auto"><table><thead><tr><th>Field</th><th>Expected</th><th>Typed</th><th>Result</th><th>Similarity</th></tr></thead><tbody>
+      ${r.fields.map(f=>`<tr><td>${esc(f.key)}</td><td class="mono">${esc(f.value)}</td><td class="mono">${f.typed==null?'<span class="muted">-</span>':esc(f.typed)}</td><td>${statusPill[f.status]}</td><td>${f.sim}%</td></tr>`).join('')}
+    </tbody></table></div><br>`:''}
+    <h3>Word-by-word comparison</h3>
+    <div class="legend small" style="margin-bottom:8px"><span class="diff"><span class="sub">${sp?'said':'typed'}</span><span class="exp">expected</span></span> wrong word
+      <span class="diff"><span class="del">word</span></span> missed <span class="diff"><span class="ins">word</span></span> extra</div>
+    <div class="diff">${renderDiff(r.ops)}</div><br>
+    <h3>Side by side</h3>
+    ${sp?`<div class="side"><div><label style="margin-top:0">Passage</label><pre>${esc(ref)}</pre></div>
+      <div><label style="margin-top:0">Transcript (speech-to-text). Correct anything the recogniser misheard, then re-score.</label>
+      <textarea id="rTrans" rows="12" class="mono">${esc(s.answer)}</textarea>
+      <div class="row" style="margin-top:6px"><button class="small" id="rRescore">Re-score with this transcript</button>
+      ${s.asrOriginal!=null&&s.asrOriginal!==s.answer?'<button class="small" id="rRevert">Restore original transcript</button><span class="pill warn">edited</span>':''}</div></div></div>`
+    :`<div class="side"><div><label style="margin-top:0">Expected (reference)</label><pre>${esc(ref)}</pre></div><div><label style="margin-top:0">Candidate typed</label><pre>${esc(s.answer)||'<span class="muted">(empty)</span>'}</pre></div></div>`}
+    ${sp?`<br><h3>Speaking rubric (1 = poor, 5 = excellent)</h3><div class="grid3">
+      <div><label>Pronunciation</label>${rubSel('pron')}</div><div><label>Fluency & pace</label>${rubSel('flu')}</div><div><label>Clarity & tone</label>${rubSel('cla')}</div></div>`:''}
+    <br><h3>Assessor decision</h3>
+    <div class="grid3">
+      <div><label>Final score (%)</label><input type="number" id="rScore" min="0" max="100" step="0.1" value="${s.finalScore??r.auto}"></div>
+      <div><label>Decision</label><select id="rDec">${['','Pass','Fail','Hold'].map(d=>`<option ${s.decision===d?'selected':''} value="${d}">${d||'Pending'}</option>`).join('')}</select></div>
+      <div><label>Suggested</label><div style="padding-top:8px">${r.auto>=settings.passMark?'<span class="pill ok">Pass</span>':'<span class="pill bad">Fail</span>'} <span class="small muted">pass mark ${settings.passMark}%</span></div></div>
+    </div>
+    <label>Notes</label><textarea id="rNotes" rows="3">${esc(s.notes)}</textarea>
+    <div class="row" style="margin-top:14px"><button class="danger small" id="rDel">Delete submission</button><span class="spacer"></span><button class="primary" id="rSave">Save decision</button></div>
+  </div>`;
+  if(!dlg.open)dlg.showModal();
+  dlg.onclose=()=>{if(audioUrl)URL.revokeObjectURL(audioUrl)};
+  const keepForm=()=>{s.finalScore=$('#rScore').value===''?null:+$('#rScore').value;s.decision=$('#rDec').value;s.notes=$('#rNotes').value;
+    if(sp)s.rubric={pron:$('#rb_pron').value,flu:$('#rb_flu').value,cla:$('#rb_cla').value}};
+  const rescoreWith=async txt=>{keepForm();s.answer=txt;const r2=score(ref,txt,optsFor(t||{kind:s.kind}));s.auto=r2.auto;s.wordAcc=r2.wordAcc;
+    s.wpm=s.recDur?Math.round(r2.typedWords/(s.recDur/60)):null;if(s.finalScore===r.auto)s.finalScore=null;await DB.put('submissions',s);reviewSub(s.id)};
+  if($('#rDl'))$('#rDl').onclick=async()=>{const f=await recordingFile(s);downloadBlob(f.blob,f.name)};
+  if($('#rSaveF'))$('#rSaveF').onclick=async()=>{
+    if(!FS.handle){try{await FS.pick()}catch{return}}
+    try{const p=await saveRecording(s,true);$('#rSavedAt').innerHTML='Saved: <span class="mono">'+esc(p)+'</span>'}catch(e){alert('Could not save: '+(e.message||e))}};
+  if($('#rRescore'))$('#rRescore').onclick=()=>rescoreWith($('#rTrans').value.trim());
+  if($('#rRevert'))$('#rRevert').onclick=()=>rescoreWith(s.asrOriginal);
+  $('#rSave').onclick=async()=>{keepForm();if(sp&&$('#rTrans').value.trim()!==s.answer){s.answer=$('#rTrans').value.trim();
+      const r2=score(ref,s.answer,optsFor(t||{kind:s.kind}));Object.assign(r,{auto:r2.auto,wordAcc:r2.wordAcc,fieldAcc:r2.fieldAcc,typedWords:r2.typedWords})}
+    s.auto=r.auto;s.wordAcc=r.wordAcc;s.fieldAcc=r.fieldAcc;if(sp)s.wpm=s.recDur?Math.round(r.typedWords/(s.recDur/60)):null;
+    s.reviewedAt=Date.now();await DB.put('submissions',s);dlg.close();renderSubs()};
+  $('#rDel').onclick=async()=>{if(confirm('Delete this submission permanently?')){await DB.del('submissions',s.id);dlg.close();renderSubs()}};
+}
+async function saveAllRecordings(force=false){
+  if(!(await FS.ensure(true))){alert('Choose a recordings folder first, and allow the browser to save there.');return}
+  const subs=(await DB.all('submissions')).filter(s=>s.kind==='speak'&&(s.audio||s.audioPath)&&(force||!s.savedFile));let ok=0,fail=0;
+  for(const s of subs){try{await saveRecording(s);ok++}catch(e){fail++}}
+  alert(`Saved ${ok} recording(s) to "${FS.handle.name}".${fail?` ${fail} failed.`:''}`);
+}
+async function exportCSV(){
+  const subs=(await DB.all('submissions')).sort((a,b)=>a.submittedAt-b.submittedAt);
+  const cols=['name','cid','testTitle','kind','submittedAt','durationSec','plays','blurs','pasteAttempts','autoSubmitted','wordAcc','fieldAcc','wpm','recDur','pronunciation','fluency','clarity','auto','finalScore','decision','notes','savedFile','answer'];
+  const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  const val=(s,c)=>c==='submittedAt'?new Date(s[c]).toISOString():c==='kind'?(s.kind==='speak'?'read-aloud':'listen-type')
+    :c==='pronunciation'?s.rubric?.pron:c==='fluency'?s.rubric?.flu:c==='clarity'?s.rubric?.cla:s[c];
+  const rows=[cols.join(',')].concat(subs.map(s=>cols.map(c=>q(val(s,c))).join(',')));
+  const blob=new Blob(['﻿'+rows.join('\r\n')],{type:'text/csv'});const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=`assessment-results-${new Date().toISOString().slice(0,10)}.csv`;a.click();
+}
+
+/* Tests management */
+async function renderTests(){
+  const tests=(await DB.all('tests')).sort((a,b)=>a.created-b.created);
+  $('#tab').innerHTML=`<div class="card"><div class="row" style="margin-bottom:10px"><h3 style="margin:0">Audio passages</h3><span class="spacer"></span><button class="primary small" onclick="editTest()">+ New passage</button></div>
+    ${tests.length?`<table><thead><tr><th>Title</th><th>Type</th><th>Plays / attempts</th><th>Time limit</th><th>Status</th><th></th></tr></thead><tbody>
+    ${tests.map(t=>`<tr><td><b>${esc(t.title)}</b><div class="small muted">${t.text.split(/\s+/).length} words${isSpeak(t)?'':' · '+parseFields(t.text).length+' fields'}</div></td>
+      <td>${isSpeak(t)?'Read aloud (speech-to-text)':'Listen & type · '+(t.mode==='file'?'uploaded file':'computer voice')}</td><td>${t.maxPlays||'Unlimited'}</td><td>${t.timeLimit?t.timeLimit+' min':'None'}</td>
+      <td>${t.active?'<span class="pill ok">Active</span>':'<span class="pill miss">Hidden</span>'}</td>
+      <td style="white-space:nowrap"><button class="small" onclick="editTest('${t.id}')">Edit</button> <button class="small danger" onclick="delTest('${t.id}')">Delete</button></td></tr>`).join('')}</tbody></table>`
+    :'<p class="muted">No passages yet. <button class="small" onclick="addSamples()">Add the two sample passages</button></p>'}</div>`;
+}
+async function delTest(id){if(confirm('Delete this passage? Its submissions are kept.')){await DB.del('tests',id);renderTests()}}
+async function editTest(id){
+  const t=id?await DB.get('tests',id):{id:uid(),created:Date.now(),kind:'listen',title:'',text:'',mode:'tts',voiceURI:'',rate:0.9,gap:0.6,maxPlays:2,timeLimit:10,allowPause:true,showResult:false,active:true,lang:'en-US',showLive:true};
+  const langs=[['en-US','English (US)'],['en-IN','English (India)'],['en-GB','English (UK)'],['en-AU','English (Australia)'],['en-PH','English (Philippines)']];
+  loadVoices();const en=voices.filter(v=>/^en/i.test(v.lang));const vlist=en.length?en:voices;
+  const dlg=$('#dlg');
+  dlg.innerHTML=`<div class="dlg-head"><b>${id?'Edit':'New'} passage</b><span class="spacer"></span><button class="small" onclick="$('#dlg').close()">Close</button></div>
+  <div class="dlg-body">
+    <label>Title</label><input type="text" id="tTitle" value="${esc(t.title)}" placeholder="e.g. Claims escalation, Set A">
+    <label>Assessment type</label>
+    <select id="tKind"><option value="listen" ${!isSpeak(t)?'selected':''}>Listen & type: candidate hears audio and types it</option>
+      <option value="speak" ${isSpeak(t)?'selected':''}>Read aloud: candidate reads a paragraph, speech is converted to text and scored</option></select>
+    <label id="txtLbl"></label>
+    <textarea id="tText" rows="14" class="mono">${esc(t.text)}</textarea>
+    <div class="notice" id="spkNote" style="margin-top:10px">Speech-to-text uses the browser's built-in recogniser (Chrome or Edge). The candidate's recording stays on this computer, but the browser sends the audio to its speech service (Google or Microsoft) to produce the text. You can listen to every recording and correct the transcript during review.</div>
+    <div class="grid2">
+      <div class="spk"><label>Speaker's accent / language</label><select id="tLang">${langs.map(([v,n])=>`<option value="${v}" ${t.lang===v?'selected':''}>${n}</option>`).join('')}</select></div>
+      <div class="lst"><label>Audio source</label><select id="tMode"><option value="tts" ${t.mode==='tts'?'selected':''}>Computer voice reads the text (offline)</option><option value="file" ${t.mode==='file'?'selected':''}>Upload a recorded audio file</option></select></div>
+      <div id="vBox" class="lst"><label>Voice</label><select id="tVoice">${vlist.map(v=>`<option value="${esc(v.voiceURI)}" ${v.voiceURI===t.voiceURI?'selected':''}>${esc(v.name)} (${esc(v.lang)})${v.localService?'':' (online)'}</option>`).join('')||'<option value="">Default voice</option>'}</select></div>
+      <div id="fBox" class="lst"><label>Audio file (mp3, wav, m4a, ogg) ${t.audio?`<span class="pill ok">${esc(t.audioName||'file attached')}</span>`:t.audioPath?`<span class="pill ok">${esc(t.audioName||'file attached')}</span>`:''}</label><input type="file" id="tFile" accept="audio/*"></div>
+      <div class="lst"><label>Playback speed: <span id="rateV">${t.rate}</span>x</label><input type="range" id="tRate" min="0.5" max="1.5" step="0.05" value="${t.rate}" style="width:100%"></div>
+      <div id="gBox" class="lst"><label>Pause between lines: <span id="gapV">${t.gap}</span>s</label><input type="range" id="tGap" min="0" max="3" step="0.1" value="${t.gap??0.6}" style="width:100%"></div>
+      <div><label id="plLbl">Max plays (0 = unlimited)</label><input type="number" id="tPlays" min="0" value="${t.maxPlays}"></div>
+      <div><label>Time limit in minutes (0 = none)</label><input type="number" id="tTime" min="0" value="${t.timeLimit}"></div>
+    </div>
+    <label class="check lst"><input type="checkbox" id="tPause" ${t.allowPause?'checked':''}> Candidate can pause and resume</label>
+    <label class="check spk"><input type="checkbox" id="tLive" ${t.showLive!==false?'checked':''}> Show the live transcript to the candidate while they speak</label>
+    <label class="check"><input type="checkbox" id="tShow" ${t.showResult?'checked':''}> Show score to candidate after submitting</label>
+    <label class="check"><input type="checkbox" id="tActive" ${t.active?'checked':''}> Active (visible to candidates)</label>
+    <div class="player lst" style="margin-top:16px"><button id="tPrev">▶ Preview audio</button><button id="tStop">Stop</button><div class="bar"><div id="tBar"></div></div></div>
+    <div class="row" style="margin-top:16px"><span class="spacer"></span><button onclick="$('#dlg').close()">Cancel</button><button class="primary" id="tSave">Save passage</button></div>
+  </div>`;
+  dlg.showModal();
+  const sync=()=>{const sp=$('#tKind').value==='speak';
+    dlg.querySelectorAll('.lst').forEach(e=>e.style.display=sp?'none':'');dlg.querySelectorAll('.spk').forEach(e=>e.style.display=sp?'':'none');
+    $('#spkNote').style.display=sp?'':'none';
+    $('#plLbl').textContent=sp?'Max recording attempts (0 = unlimited)':'Max plays (0 = unlimited)';
+    $('#txtLbl').innerHTML=sp?'Paragraph the candidate will read aloud (as long as you need)':'Reference text (the correct answer). Lines formatted as <span class="mono">Field: Value</span> are scored field by field.';
+    if(!sp){const f=$('#tMode').value==='file';$('#vBox').style.display=f?'none':'';$('#gBox').style.display=f?'none':'';$('#fBox').style.display=f?'':'none'}};sync();
+  $('#tMode').onchange=sync;$('#tKind').onchange=sync;$('#tRate').oninput=e=>$('#rateV').textContent=e.target.value;$('#tGap').oninput=e=>$('#gapV').textContent=e.target.value;
+  let newFile=null;$('#tFile').onchange=e=>{newFile=e.target.files[0]||null};
+  const collect=()=>({...t,kind:$('#tKind').value,lang:$('#tLang').value,showLive:$('#tLive').checked,title:$('#tTitle').value.trim(),text:$('#tText').value,mode:$('#tMode').value,voiceURI:$('#tVoice')?.value||'',
+    rate:+$('#tRate').value,gap:+$('#tGap').value,maxPlays:+$('#tPlays').value||0,timeLimit:+$('#tTime').value||0,allowPause:$('#tPause').checked,
+    showResult:$('#tShow').checked,active:$('#tActive').checked,audio:newFile||t.audio,audioName:newFile?newFile.name:t.audioName});
+  let prev=null;const stopPrev=()=>{if(prev)prev.stop();prev=null;$('#tBar').style.width='0'};
+  $('#tPrev').onclick=()=>{stopPrev();const c=collect();if(c.mode==='file'&&!c.audio&&!c.audioUrl){alert('Choose an audio file first.');return}
+    prev=c.mode==='file'?new FilePlayer(c,{onProgress:p=>$('#tBar').style.width=p*100+'%',onEnd:()=>{}}):new TTSPlayer(c,{onProgress:p=>$('#tBar').style.width=p*100+'%',onEnd:()=>{}});prev.play()};
+  $('#tStop').onclick=stopPrev;dlg.onclose=stopPrev;
+  $('#tSave').onclick=async()=>{const c=collect();if(!c.title||!c.text.trim()){alert('Title and reference text are required.');return}
+    if(c.kind!=='speak'&&c.mode==='file'&&!c.audio&&!c.audioPath){alert('Upload an audio file, or switch to computer voice.');return}
+    await DB.put('tests',c);dlg.close();renderTests()};
+}
+
+/* Settings */
+async function renderSettings(){
+  const fst=await FS.status();
+  $('#tab').innerHTML=`<div class="card" style="max-width:640px">
+    <h3>Recordings folder</h3>
+    ${FS.supported?`<p class="small muted">Recordings are stored in Supabase Storage. Choose a folder to download local copies, inside one sub-folder per assessment, as
+      <span class="mono">date_name_id.wav</span> plus a <span class="mono">.txt</span> with the transcript and scores.</p>
+      <div class="row"><span>Folder: ${FS.handle?`<b class="mono">${esc(FS.handle.name)}</b> ${fst==='granted'?'<span class="pill ok">Connected</span>':'<span class="pill warn">Needs permission</span>'}`:'<span class="muted">Not set</span>'}</span>
+        <span class="spacer"></span><button id="fPick">${FS.handle?'Change folder':'Choose folder'}</button>${FS.handle&&fst!=='granted'?'<button id="fRe">Reconnect</button>':''}</div>
+      <div class="grid2"><div><label>File format</label><select id="sFmt"><option value="wav" ${settings.audioFormat==='wav'?'selected':''}>WAV (plays everywhere, larger)</option>
+        <option value="webm" ${settings.audioFormat==='webm'?'selected':''}>WebM/Opus (small, as recorded)</option></select></div>
+        <div><label>&nbsp;</label><button id="fAll" ${FS.handle?'':'disabled'}>Save all recordings to folder</button></div></div>
+      <p class="small muted">After you restart the browser, Chrome or Edge may ask once to allow saving again. Choose "Allow on every visit" to stop that.</p>`
+    :'<div class="notice">Saving to a folder needs Chrome or Edge. In this browser, use "Download recording" on each submission.</div>'}
+  </div>
+  <div class="card" style="max-width:640px">
+    <h3>Scoring</h3>
+    <p class="small muted">Auto score = weighted average of <b>word accuracy</b> (the whole text, aligned word by word; wrong, missing and extra words count as errors) and <b>field accuracy</b> (share of <span class="mono">Field: Value</span> lines typed exactly).</p>
+    <div class="grid3">
+      <div><label>Word accuracy weight</label><input type="number" id="sW" min="0" value="${settings.wordWeight}"></div>
+      <div><label>Field accuracy weight</label><input type="number" id="sF" min="0" value="${settings.fieldWeight}"></div>
+      <div><label>Pass mark (%)</label><input type="number" id="sP" min="0" max="100" value="${settings.passMark}"></div>
+    </div>
+    <label class="check"><input type="checkbox" id="sCase" ${settings.ignoreCase?'checked':''}> Ignore upper/lower case</label>
+    <label class="check"><input type="checkbox" id="sPunct" ${settings.ignorePunct?'checked':''}> Ignore punctuation in word accuracy (fields are always strict)</label>
+    <h3 style="margin-top:20px">Assessor accounts</h3>
+    <p class="small muted">Add assessors in Supabase: create the user under Authentication → Users, then add their email to the <span class="mono">assessors</span> table.</p>
+    <div class="row" style="margin-top:16px"><button id="sRescore">Re-score all submissions</button><span class="spacer"></span><button class="primary" id="sSave">Save settings</button></div>
+  </div>
+  <div class="card" style="max-width:640px"><h3>Backup</h3><p class="small muted">Everything lives in this browser. Export a backup to move it to another computer.</p>
+    <div class="row"><button id="bExp">Export backup (JSON)</button><label class="check" style="margin:0"><input type="file" id="bImp" accept=".json" style="display:none"><button onclick="$('#bImp').click()">Import backup</button></label></div>
+    <p class="small muted">Uploaded audio files are not included in backups. Re-attach them after importing.</p></div>`;
+  if($('#fPick'))$('#fPick').onclick=async()=>{try{await FS.pick();renderSettings()}catch(e){if(e.name!=='AbortError')alert('Could not use that folder: '+e.message)}};
+  if($('#fRe'))$('#fRe').onclick=async()=>{await FS.ensure(true);renderSettings()};
+  if($('#fAll'))$('#fAll').onclick=()=>saveAllRecordings(confirm('Re-save recordings that were already saved too?\n\nOK = save all, Cancel = only unsaved ones')).then(renderSettings);
+  if($('#sFmt'))$('#sFmt').onchange=async e=>{settings.audioFormat=e.target.value;await DB.put('kv',settings)};
+  $('#sSave').onclick=async()=>{Object.assign(settings,{wordWeight:+$('#sW').value||0,fieldWeight:+$('#sF').value||0,passMark:+$('#sP').value||0,
+    ignoreCase:$('#sCase').checked,ignorePunct:$('#sPunct').checked});await DB.put('kv',settings);alert('Settings saved.')};
+  $('#sRescore').onclick=async()=>{const subs=await DB.all('submissions');let n=0;for(const s of subs){const t=await DB.get('tests',s.testId);if(!t)continue;
+    const r=score(t.text,s.answer,optsFor(t));s.auto=r.auto;s.wordAcc=r.wordAcc;s.fieldAcc=r.fieldAcc;await DB.put('submissions',s);n++}alert(`Re-scored ${n} submission(s).`)};
+  $('#bExp').onclick=async()=>{const tests=(await DB.all('tests')).map(({audio,...t})=>t);const data={version:1,exportedAt:new Date().toISOString(),settings,tests,submissions:await DB.all('submissions')};
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='assessment-backup.json';a.click()};
+  $('#bImp').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());
+    for(const t of d.tests||[]){const ex=await DB.get('tests',t.id);await DB.put('tests',{...t,audio:ex?.audio})}
+    for(const s of d.submissions||[])await DB.put('submissions',s);alert(`Imported ${(d.tests||[]).length} passages and ${(d.submissions||[]).length} submissions.`)}catch(err){alert('Could not import: '+err.message)}};
+}
+
+/* ---------------- Boot ---------------- */
+(async()=>{
+  const cfg=window.PORTAL_CONFIG;
+  const key=cfg&&(cfg.supabasePublishableKey||cfg.supabaseAnonKey); // anon key still accepted for older projects
+  if(!cfg||!cfg.supabaseUrl||!key||/YOUR-PROJECT|PASTE/.test(cfg.supabaseUrl+key)){
+    $('#app').innerHTML='<div class="card"><h2>Setup needed</h2><p>Open <b>config.js</b> and paste your Supabase project URL and publishable key. See README.md.</p></div>';return}
+  if(/^sb_secret_/.test(key)){$('#app').innerHTML='<div class="card"><h2>Wrong key</h2><p>config.js contains a <b>secret</b> key. Never put a secret key in a web page. Replace it with the <b>publishable</b> key (sb_publishable_…) and rotate the secret key in Supabase.</p></div>';return}
+  sb=window.supabase.createClient(cfg.supabaseUrl,key);
+  await LocalDB.open();
+  try{await getSettings()}catch(e){
+    $('#app').innerHTML=`<div class="card"><h2>Cannot reach the database</h2><p class="muted mono">${esc(e.message||e)}</p>
+      <p>Check that config.js is correct and that you ran <b>schema.sql</b> in the Supabase SQL editor. Free projects pause after a week without use. You can restore them from the Supabase dashboard.</p></div>`;return}
+  await FS.load();await checkAssessor();home();
+})();
+async function addSamples(){
+  await DB.put('tests',{id:'sample1',kind:'listen',created:Date.now(),title:'Claims escalation summary (sample)',text:SAMPLE_TEXT,mode:'tts',voiceURI:'',rate:0.85,gap:0.8,maxPlays:2,timeLimit:10,allowPause:true,showResult:false,active:true});
+  await DB.put('tests',{id:'sample2',kind:'speak',created:Date.now()+1,title:'Read aloud: out-of-network explanation (sample)',text:SAMPLE_SPEAK,lang:'en-US',showLive:true,maxPlays:2,timeLimit:10,showResult:false,active:true});
+  renderTests();
+}
+</script>
+</body>
+</html>
