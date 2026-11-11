@@ -23,13 +23,22 @@ Read-aloud recordings upload as WebM/Opus, about 0.5–1 MB per minute, so 1 GB 
 5. Optional: under **Authentication → Sign In / Providers**, turn off *Allow new users to sign up*. Strangers can't become assessors anyway, because only emails in the `assessors` table get access.
 
 ## 2. Connect the page
-1. Open **Project Settings → API Keys** and copy the **Publishable key** (`sb_publishable_…`) into `config.js` as `supabasePublishableKey`.
+1. Open **Project Settings → API Keys** and copy the **Publishable key** (`sb_publishable_…`) into `public/config.js` as `supabasePublishableKey`.
 2. Copy the **Project URL** (Project Settings → Data API, in the form `https://xxxx.supabase.co`) into `supabaseUrl`.
 
 The publishable key replaces the old `anon` key. Never use the **secret** key (`sb_secret_…`) in the page: the portal refuses to start if it finds one. Requests made with the publishable key still run as Postgres's built-in `anon` role, which is why `schema.sql` refers to `anon`. That's the role name, not the deprecated key.
 
-## 3. Publish the page (pick one)
-- **Netlify Drop** (easiest): go to https://app.netlify.com/drop and drag this whole `hosted` folder onto the page. You get an `https://….netlify.app` link.
+## 3. Publish the page
+The site files are in `public/` (`index.html` and `config.js`). Only that folder is deployed.
+
+**Firebase Hosting** (current setup): live at https://audio-assessment.web.app. Assessors sign in at https://audio-assessment.web.app/#assessor.
+```
+firebase deploy --only hosting
+```
+Run it from this folder after any change. `firebase.json` and `.firebaserc` are already configured for the `audio-assessment` project.
+
+Alternatives:
+- **Netlify Drop**: go to https://app.netlify.com/drop and drag the `public` folder onto the page.
 - **Cloudflare Pages**: Workers & Pages → Create → Pages → *Upload assets* → upload this folder.
 - **GitHub Pages**: push the folder to a repository, then Settings → Pages → deploy from branch.
 

@@ -4,3 +4,4 @@ recordings/
 assessment-backup*.json
 .DS_Store
 Thumbs.db
+.firebase/
