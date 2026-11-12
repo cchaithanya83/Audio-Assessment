@@ -104,6 +104,8 @@ thead th:first-child{border-top-left-radius:10px} thead th:last-child{border-top
 .diff .del{background:var(--miss-bg);color:var(--miss);border:1px dashed var(--miss);border-radius:4px;padding:0 3px}
 .diff .ins{background:var(--warn-bg);color:var(--warn);border-radius:4px;padding:1px 3px}
 .legend span{margin-right:12px}
+.diff .hardok{color:var(--ok);font-weight:600;box-shadow:inset 0 -2px 0 var(--ok)}
+mark{background:var(--accent-soft);color:var(--accent);font-weight:600;border-radius:4px;padding:0 3px}
 .mono{font-family:var(--mono);font-size:13px}
 .side{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media (max-width:720px){.side{grid-template-columns:1fr}}
@@ -227,7 +229,7 @@ const $=s=>document.querySelector(s);
 const fmtTime=s=>{s=Math.max(0,Math.round(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
 const fmtDate=t=>new Date(t).toLocaleString();
 
-const DEFAULT_SETTINGS={id:'settings',pin:'admin123',wordWeight:40,fieldWeight:60,passMark:85,ignoreCase:false,ignorePunct:false,audioFormat:'wav'};
+const DEFAULT_SETTINGS={id:'settings',pin:'admin123',wordWeight:40,fieldWeight:60,passMark:85,ignoreCase:false,ignorePunct:false,audioFormat:'wav',spkAccW:40,spkHardW:25,spkFluW:35};
 const SAMPLE_TEXT=`Escalation summary prepared for supervisor review. The member disputed the coinsurance applied to a recent specialist claim and requested a full benefit re-verification. The representative confirmed that the servicing provider terminated its network agreement mid plan year, which moved the claim to the out of network tier.
 
 Member Name: Rajesh Krishnamurthy
@@ -248,17 +250,17 @@ Reference Number: REF-40917AZ
 Effective Date: 03/15/2026
 Approved Amount: $2,918.75`;
 
-const SAMPLE_SPEAK=`Thank you for calling member services. Before we review your claim, I would like to explain how your plan handles visits to specialists. When you receive care from a provider inside your network, you usually pay a fixed copay, and the plan covers most of the remaining cost. However, if the provider leaves the network during the plan year, any visit after that date may be processed at the out of network level. In that case, you may be responsible for a larger share of the bill, including coinsurance and any amount above the allowed charge.
+const SAMPLE_SPEAK=`Thank you for calling member services. Before we review your claim, I would like to explain how your plan handles visits to *specialists*. When you receive care from a provider inside your network, you usually pay a fixed copay, and the plan covers most of the remaining cost. However, if the provider leaves the network during the plan year, any visit after that date may be processed at the out of network level. In that case, you may be *responsible* for a larger share of the bill, including *coinsurance* and any amount above the allowed charge.
 
-I understand this can be frustrating, especially when you were not told about the change in advance. Many members only learn that a provider has left the network when the explanation of benefits arrives in the mail, and by then the visit has already taken place. Providers are expected to inform their patients when their agreement with the plan is ending, but that notice does not always reach everyone in time. Because of this, the plan has a process to look at situations like yours individually rather than applying the out of network rules automatically.
+I understand this can be frustrating, especially when you were not told about the change in advance. Many members only learn that a provider has left the network when the *explanation of benefits* arrives in the mail, and by then the visit has already taken place. Providers are expected to inform their patients when their agreement with the plan is ending, but that notice does not always reach everyone in time. Because of this, the plan has a process to look at situations like yours *individually* rather than applying the out of network rules *automatically*.
 
-What I can do today is request a formal review of the claim, confirm the exact date the provider's agreement ended, and check whether you qualify for continuity of care. If you are in the middle of an active course of treatment, such as physical therapy after surgery, ongoing care for a serious condition, or a pregnancy, the plan may allow you to keep seeing the same provider at the in network rate for a limited period. This period is usually up to ninety days, although it can be longer in certain cases. Your provider's office may also need to send supporting records, so I will make a note on your file to request them.
+What I can do today is request a formal review of the claim, confirm the exact date the provider's agreement ended, and check whether you qualify for *continuity of care*. If you are in the middle of an active course of treatment, such as *physical therapy* after surgery, ongoing care for a serious condition, or a pregnancy, the plan may allow you to keep seeing the same provider at the in network rate for a limited period. This period is usually up to ninety days, although it can be longer in certain cases. Your provider's office may also need to send *supporting records*, so I will make a note on your file to request them.
 
-While the review is in progress, you do not need to pay the balance shown on the provider's bill. I will place a hold on the account so that the amount is not sent to collections. The review normally takes between ten and fifteen business days. If the plan agrees that the claim should be processed at the in network level, it will be adjusted automatically, and both you and the provider will receive an updated statement showing the corrected amount. If the original decision is upheld, you will receive a letter that explains the reason and describes your right to file an appeal.
+While the review is in progress, you do not need to pay the balance shown on the provider's bill. I will place a hold on the account so that the amount is not sent to *collections*. The review normally takes between ten and fifteen business days. If the plan agrees that the claim should be processed at the in network level, it will be adjusted automatically, and both you and the provider will receive an updated statement showing the corrected amount. If the original decision is upheld, you will receive a letter that explains the reason and describes your right to file an *appeal*.
 
-In the meantime, there are a few steps you can take to avoid similar problems in the future. Before scheduling a new appointment, you can confirm a provider's network status by using the provider search tool on our website, or by calling the number on the back of your member card. It is a good idea to check again before each visit, because network agreements can change at any time during the year. If your doctor refers you to a specialist, ask the referral coordinator to confirm that the specialist is in network for your specific plan, not only for the insurance company in general.
+In the meantime, there are a few steps you can take to avoid similar problems in the future. Before scheduling a new appointment, you can confirm a provider's network status by using the provider search tool on our website, or by calling the number on the back of your member card. It is a good idea to check again before each visit, because network agreements can change at any time during the year. If your doctor refers you to a specialist, ask the *referral coordinator* to confirm that the specialist is in network for your specific plan, not only for the insurance company in general.
 
-You may also want to review your summary of benefits, which explains your deductible, coinsurance, and out of pocket maximum. Once you reach the out of pocket maximum for the year, the plan pays one hundred percent of covered services for the rest of the plan year. Keeping copies of your bills and statements will make it easier to track your progress toward that limit.
+You may also want to review your summary of benefits, which explains your deductible, coinsurance, and *out of pocket maximum*. Once you reach the out of pocket maximum for the year, the plan pays one hundred percent of covered services for the rest of the plan year. Keeping copies of your bills and statements will make it easier to track your progress toward that limit.
 
 I will send you a written summary of everything we discussed today, along with a reference number, so you can follow up at any point. Is there anything else I can help you with before we end the call? Thank you for your patience, and have a good day.`;
 const SR_API=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -316,7 +318,13 @@ async function getSettings(){settings={...DEFAULT_SETTINGS,...(await DB.get('kv'
 
 /* ---------------- Scoring ---------------- */
 function normTok(t,opt){let k=t;if(opt.ignoreCase)k=k.toLowerCase();if(opt.ignorePunct)k=k.replace(/[^\p{L}\p{N}]/gu,'');return k}
-function tokens(text,opt){return text.split(/\s+/).filter(Boolean).map(raw=>({raw,key:normTok(raw,opt)})).filter(t=>t.key!=='')}
+// Difficult words are written as *word* or *several words* in a passage. markHard() tags each such word
+// with an invisible marker so tokens() can flag it; plainText() removes the asterisks for display.
+const HARD='⁣';
+const markHard=t=>String(t||'').replace(/\*([^*\n]+)\*/g,(m,p)=>p.trim().split(/\s+/).map(w=>HARD+w).join(' '));
+const plainText=t=>String(t||'').replace(/\*([^*\n]+)\*/g,'$1');
+const hlHard=t=>esc(t).replace(/\*([^*\n]+)\*/g,'<mark>$1</mark>');
+function tokens(text,opt){return text.split(/\s+/).filter(Boolean).map(r=>{const hard=r.includes(HARD),raw=r.replace(/⁣/g,'');return{raw,key:normTok(raw,opt),hard}}).filter(t=>t.key!=='')}
 // Word-level alignment (Levenshtein with backtrace)
 function align(ref,hyp){
   const n=ref.length,m=hyp.length,W=m+1;const d=new Uint32Array((n+1)*W);
@@ -342,7 +350,12 @@ const keyNorm=k=>k.toLowerCase().replace(/[^a-z0-9]/g,'');
 function score(refText,hypText,opt){
   const ref=tokens(refText,opt),hyp=tokens(hypText,opt);const ops=align(ref,hyp);
   const c={eq:0,sub:0,del:0,ins:0};ops.forEach(o=>c[o.t]++);
-  const N=ref.length||1;const wordAcc=Math.max(0,Math.round(1000*(N-c.sub-c.del-c.ins)/N)/10);
+  // For read-aloud, extra words (fillers, repeats) are scored under fluency, not accuracy.
+  const N=ref.length||1;const wordAcc=Math.max(0,Math.round(1000*(N-c.sub-c.del-(opt.noInsPenalty?0:c.ins))/N)/10);
+  const hardOps=ops.filter(o=>o.r&&o.r.hard);
+  const hard={total:hardOps.length,correct:hardOps.filter(o=>o.t==='eq').length,
+    list:hardOps.map(o=>({word:o.r.raw,status:o.t==='eq'?'ok':o.t==='sub'?'wrong':'missed',said:o.h?.raw}))};
+  hard.acc=hard.total?Math.round(1000*hard.correct/hard.total)/10:null;
   const refF=opt.noFields?[]:parseFields(refText),hypF=parseFields(hypText);const used=new Set();
   const fields=refF.map(f=>{
     const idx=hypF.findIndex((h,i)=>!used.has(i)&&keyNorm(h.key)===keyNorm(f.key));
@@ -358,7 +371,103 @@ function score(refText,hypText,opt){
   let auto;
   if(fieldAcc===null)auto=wordAcc;
   else{const tw=(+opt.wordWeight)+(+opt.fieldWeight)||1;auto=Math.round(10*(wordAcc*opt.wordWeight+fieldAcc*opt.fieldWeight)/tw)/10}
-  return{ops,counts:c,refWords:ref.length,typedWords:hyp.length,wordAcc,fields,fieldCorrect:fc,fieldAcc,auto};
+  return{ops,counts:c,refWords:ref.length,typedWords:hyp.length,wordAcc,fields,fieldCorrect:fc,fieldAcc,auto,hard};
+}
+
+/* ---------------- Read-aloud: automatic fluency & difficult-word assessment ---------------- */
+const clamp=v=>Math.max(0,Math.min(100,Math.round(v)));
+// Energy-based voice activity detection on the recording: finds speech vs. silence, then pause statistics.
+async function analyzeAudio(blob){
+  const ctx=new (window.AudioContext||window.webkitAudioContext)();let audio;
+  try{audio=await ctx.decodeAudioData(await blob.arrayBuffer())}finally{ctx.close()}
+  const rate=16000,off=new OfflineAudioContext(1,Math.max(1,Math.ceil(audio.duration*rate)),rate);
+  const src=off.createBufferSource();src.buffer=audio;src.connect(off.destination);src.start();
+  const x=(await off.startRendering()).getChannelData(0);
+  const FR=0.02,F=Math.round(rate*FR),n=Math.floor(x.length/F);if(n<10)return null;
+  const db=new Float32Array(n);
+  for(let i=0;i<n;i++){let s=0;for(let j=i*F;j<(i+1)*F;j++)s+=x[j]*x[j];db[i]=10*Math.log10(s/F+1e-10)}
+  const sorted=Float32Array.from(db).sort(),pct=p=>sorted[Math.min(n-1,Math.floor(p*n))];
+  const floor=pct(.1),peak=pct(.95),thr=floor+Math.max(8,(peak-floor)*0.3);
+  const sp=Array.from(db,v=>v>thr);
+  // Bridge gaps < 160 ms (normal between words), then drop clicks < 60 ms.
+  const smooth=(val,maxLen)=>{let i=0;while(i<n){if(sp[i]===val){let j=i;while(j<n&&sp[j]===val)j++;if(i>0&&j<n&&j-i<maxLen)for(let k=i;k<j;k++)sp[k]=!val;i=j}else i++}};
+  smooth(false,8);smooth(true,3);
+  const first=sp.indexOf(true),last=sp.lastIndexOf(true);if(first<0)return null;
+  const segs=[],pauses=[];let speech=0,i=first;
+  while(i<=last){let j=i;while(j<=last&&sp[j]===sp[i])j++;const len=(j-i)*FR;
+    segs.push({s:+(i*FR).toFixed(2),e:+(j*FR).toFixed(2),sp:sp[i]});if(sp[i])speech+=len;else pauses.push(len);i=j}
+  const active=(last-first+1)*FR,P=pauses.filter(p=>p>=0.25);
+  return{duration:+audio.duration.toFixed(1),activeTime:+active.toFixed(1),speechTime:+speech.toFixed(1),phonationRatio:+(speech/active).toFixed(3),
+    pauses:P.length,longPauses:pauses.filter(p=>p>=1).length,veryLongPauses:pauses.filter(p=>p>=2).length,
+    longestPause:+Math.max(0,...pauses).toFixed(1),meanPause:P.length?+(P.reduce((a,b)=>a+b,0)/P.length).toFixed(2):0,segs};
+}
+// Fillers and repetitions/restarts, from the extra words in the transcript alignment.
+function disfluency(ops){
+  const FILL=/^(u+m+|u+h+|uhm+|e+r+m*|a+h+|h+m+|m+h*m+)$/i;let fillers=0,reps=0;
+  ops.forEach((o,i)=>{if(o.t!=='ins')return;const k=o.h.key;if(FILL.test(k)){fillers++;return}
+    let p=i-1;while(p>=0&&!ops[p].h)p--;let q=i+1;while(q<ops.length&&!ops[q].r)q++;
+    if((p>=0&&ops[p].h.key===k)||(q<ops.length&&k.length>1&&ops[q].r.key.startsWith(k)))reps++});
+  return{fillers,reps};
+}
+// Combines reading accuracy, difficult words and fluency into one automatic speaking score.
+// Recognisers sometimes split one word in two ("coin insurance"); rejoin pairs whose combination is a passage word.
+function joinSplitWords(text,answer){
+  const k=w=>w.toLowerCase().replace(/[^\p{L}\p{N}]/gu,'');
+  const refKeys=new Set(plainText(text).split(/\s+/).map(k));const ws=String(answer||'').split(/\s+/).filter(Boolean),out=[];
+  for(let i=0;i<ws.length;i++){const a=k(ws[i]),b=ws[i+1]?k(ws[i+1]):'';
+    if(b&&refKeys.has(a+b)&&!(refKeys.has(a)&&refKeys.has(b))){out.push(ws[i]+ws[i+1]);i++}else out.push(ws[i])}
+  return out.join(' ');
+}
+function speakEval(text,answer,fl,conf){
+  answer=joinSplitWords(text,answer);
+  const r=score(markHard(text),answer||'',{...settings,ignoreCase:true,ignorePunct:true,noFields:true,noInsPenalty:true});
+  const dis=disfluency(r.ops),words=Math.max(0,r.typedWords-dis.fillers);
+  const mins=fl&&fl.activeTime?fl.activeTime/60:null;
+  const wpm=mins&&words?Math.round(words/mins):null,artic=fl&&fl.speechTime&&words?Math.round(words/(fl.speechTime/60)):null;
+  const parts={};
+  if(wpm!=null)parts.rate=wpm<70||wpm>220?0:wpm<120?clamp(100*(wpm-70)/50):wpm>165?clamp(100*(220-wpm)/55):100;
+  if(fl&&mins){parts.pauses=clamp(100-15*(fl.longPauses/mins));parts.continuity=clamp(100*(fl.phonationRatio-0.45)/0.3)}
+  if(mins&&words)parts.smooth=clamp(100-10*((dis.fillers+dis.reps)/mins));
+  const W={rate:.3,pauses:.3,continuity:.2,smooth:.2};let sw=0,ss=0;for(const k in parts){ss+=parts[k]*W[k];sw+=W[k]}
+  const flu=sw?Math.round(ss/sw):null;
+  const comps=[[r.wordAcc,+settings.spkAccW],[r.hard.total?r.hard.acc:null,+settings.spkHardW],[flu,+settings.spkFluW]].filter(c=>c[0]!=null);
+  const tw=comps.reduce((a,c)=>a+c[1],0)||1;
+  return{r,dis,wpm,artic,parts,flu,conf,overall:Math.round(10*comps.reduce((a,c)=>a+c[0]*c[1],0)/tw)/10};
+}
+function applySpeak(s,ev){s.auto=ev.overall;s.wordAcc=ev.r.wordAcc;s.hardAcc=ev.r.hard.acc;s.fluencyScore=ev.flu;s.wpm=ev.wpm;s.fieldAcc=null}
+function fluencyPanel(ev,fl,s){
+  const P=ev.parts,row=(k,v,t,sc)=>`<tr><td>${k}</td><td><b>${v}</b></td><td class="muted small">${t}</td><td>${sc==null?'':scorePill(sc)}</td></tr>`;
+  let h='<h3>Fluency analysis</h3>';
+  h+=fl?`<canvas id="tl" style="width:100%;height:56px;display:block;border-radius:10px;background:var(--panel-2);border:1px solid var(--line)"></canvas>
+    <div class="legend small muted" style="margin:6px 0 12px"><span style="color:var(--accent)">■</span> speech <span style="color:var(--warn);margin-left:10px">■</span> pause ≥ 1 s <span style="color:var(--bad);margin-left:10px">■</span> pause ≥ 2 s</div>`
+    :'<p class="muted small">No audio analysis available for this recording.</p>';
+  h+=`<div style="overflow-x:auto"><table><thead><tr><th>Measure</th><th>Value</th><th>Fluent range</th><th>Score</th></tr></thead><tbody>
+    ${row('Speech rate',ev.wpm!=null?ev.wpm+' wpm':'-','120–165 wpm',P.rate)}
+    ${row('Articulation rate (pauses removed)',ev.artic!=null?ev.artic+' wpm':'-','-',null)}
+    ${fl?row('Long pauses (≥ 1 s)',`${fl.longPauses} <span class="muted small">(${fl.veryLongPauses} over 2 s · longest ${fl.longestPause} s)</span>`,'≤ 1 per minute',P.pauses):''}
+    ${fl?row('Speaking time vs. total time',Math.round(fl.phonationRatio*100)+'%','≥ 75%',P.continuity):''}
+    ${row('Fillers / repetitions & restarts',`${ev.dis.fillers} / ${ev.dis.reps}`,'0–1 per minute',P.smooth)}
+    ${row('Recogniser confidence (clarity)',ev.conf!=null?ev.conf+'%':'-','≥ 85%',null)}
+  </tbody></table></div>`;
+  if(ev.r.hard.total)h+=`<br><h3>Difficult words <span class="muted small">(${ev.r.hard.correct} of ${ev.r.hard.total} understood)</span></h3>
+    <div class="row" style="gap:8px">${ev.r.hard.list.map(w=>{const word=esc(w.word.replace(/[^\p{L}\p{N}'-]/gu,''));
+      return w.status==='ok'?`<span class="pill ok">✓ ${word}</span>`:w.status==='wrong'?`<span class="pill bad">✗ ${word} → heard “${esc(w.said)}”</span>`:`<span class="pill miss">– ${word} (skipped)</span>`}).join('')}</div>`;
+  return h+`<p class="small muted" style="margin-top:12px">These are automatic estimates from the recording and transcript. Pronunciation is judged indirectly: a word counts as correct when the speech recogniser understood it. Recognisers often drop "um/uh", so listen to the recording to confirm fillers.</p>`;
+}
+function drawTimeline(c,fl){
+  if(!c||!fl)return;const dpr=window.devicePixelRatio||1,W=c.width=c.clientWidth*dpr,H=c.height=c.clientHeight*dpr,g=c.getContext('2d');
+  const cs=getComputedStyle(document.documentElement),col=v=>cs.getPropertyValue(v).trim(),D=fl.duration||1;
+  for(const s of fl.segs){const x=s.s/D*W,w=Math.max(1,(s.e-s.s)/D*W),len=s.e-s.s;
+    if(s.sp){g.fillStyle=col('--accent');g.fillRect(x,H*.22,w,H*.56)}
+    else if(len>=1){g.fillStyle=col(len>=2?'--bad':'--warn');g.fillRect(x,H*.4,w,H*.2)}}
+}
+// Suggests difficult words: long or many-syllable words, first occurrence only.
+function syllables(w){w=w.toLowerCase().replace(/[^a-z]/g,'');if(w.length<=3)return 1;w=w.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/,'').replace(/^y/,'');const m=w.match(/[aeiouy]{1,2}/g);return m?m.length:1}
+function autoMarkHard(text,max=15){
+  const plain=plainText(text),seen=new Set();
+  const cands=(plain.match(/[A-Za-z][A-Za-z'-]+/g)||[]).filter(w=>{const k=w.toLowerCase();if(seen.has(k))return false;seen.add(k);return syllables(w)>=4||w.length>=11});
+  const pick=new Set(cands.sort((a,b)=>syllables(b)-syllables(a)||b.length-a.length).slice(0,max).map(w=>w.toLowerCase())),done=new Set();
+  return plain.replace(/[A-Za-z][A-Za-z'-]+/g,w=>{const k=w.toLowerCase();if(pick.has(k)&&!done.has(k)){done.add(k);return'*'+w+'*'}return w});
 }
 
 /* ---------------- Audio players ---------------- */
@@ -439,6 +548,7 @@ async function candidateInstructions(){
     ${isSpeak(t)?`<ul class="rules">
       <li>You will see a passage on screen. Press <b>Start recording</b> and read the whole passage <b>aloud</b>, clearly and at a natural pace.</li>
       <li>Press <b>Stop</b> when you finish. Your voice is recorded and converted to text automatically.</li>
+      <li>Read at a natural, steady pace. Accuracy, clear pronunciation and smooth delivery (few long pauses or restarts) are all assessed.</li>
       <li>You can record <b>${t.maxPlays>0?t.maxPlays+' time(s)':'as many times as you like'}</b>. Only your <b>last</b> recording is submitted.</li>
       <li>Time limit: <b>${t.timeLimit>0?t.timeLimit+' minutes':'none'}</b>.</li>
       <li>Your browser will ask for permission to use the microphone. Choose <b>Allow</b>.</li>
@@ -459,13 +569,13 @@ async function candidateInstructions(){
 }
 function runSpeakTest(t,cand){
   const started=Date.now();let attempts=0,blurs=0,submitted=false,recording=false,srFailed=!SR_API;
-  let rec=null,mr=null,stream=null,chunks=[],finalText='',interim='',recStart=0,recDur=0,audioBlob=null,stopping=null;
+  let confs=[],rec=null,mr=null,stream=null,chunks=[],finalText='',interim='',recStart=0,recDur=0,audioBlob=null,stopping=null;
   setView(`
   <div class="card">
     <div class="row"><h2 style="margin:0">${esc(t.title)}</h2><span class="spacer"></span><span class="muted small">${esc(cand.name)}</span>
       <span class="timer" id="timer">${t.timeLimit>0?fmtTime(t.timeLimit*60):'00:00'}</span></div>
     <p class="muted small" style="margin:6px 0 12px">Read the passage below aloud.</p>
-    <div class="passage">${esc(t.text)}</div>
+    <div class="passage">${esc(plainText(t.text))}</div>
   </div>
   <div class="card">
     <div class="player">
@@ -489,7 +599,7 @@ function runSpeakTest(t,cand){
     live.innerHTML=esc(finalText)+'<span class="interim">'+esc(interim)+'</span>'||'<span class="muted">Listening…</span>';live.scrollTop=live.scrollHeight};
   function startSR(){
     rec=new SR_API();rec.lang=t.lang||'en-US';rec.continuous=true;rec.interimResults=true;
-    rec.onresult=e=>{interim='';for(let i=e.resultIndex;i<e.results.length;i++){const r=e.results[i];if(r.isFinal)finalText+=r[0].transcript.trim()+' ';else interim+=r[0].transcript}showLive()};
+    rec.onresult=e=>{interim='';for(let i=e.resultIndex;i<e.results.length;i++){const r=e.results[i];if(r.isFinal){finalText+=r[0].transcript.trim()+' ';if(r[0].confidence>0)confs.push(r[0].confidence)}else interim+=r[0].transcript}showLive()};
     rec.onerror=e=>{if(['not-allowed','service-not-allowed','network','language-not-supported'].includes(e.error)){srFailed=true;
       live.innerHTML=`<span class="muted">Speech-to-text unavailable (${esc(e.error)}). Keep reading: your audio is still being recorded for the assessor.</span>`}};
     rec.onend=()=>{if(recording&&!srFailed){try{rec.start()}catch{}}else if(rec._done)rec._done()};
@@ -499,7 +609,7 @@ function runSpeakTest(t,cand){
     if(t.maxPlays>0&&attempts>=t.maxPlays)return;
     try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}
     catch(e){alert('Microphone access is needed for this assessment. Allow the microphone in your browser and try again.');return}
-    attempts++;finalText='';interim='';chunks=[];audioBlob=null;recording=true;recStart=Date.now();
+    attempts++;finalText='';interim='';confs=[];chunks=[];audioBlob=null;recording=true;recStart=Date.now();
     mr=new MediaRecorder(stream);mr.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};mr.start(1000);
     if(!srFailed)startSR();
     live.innerHTML='<span class="muted">Listening…</span>';ui();
@@ -529,9 +639,12 @@ function runSpeakTest(t,cand){
     const sub={id:uid(),kind:'speak',testId:t.id,testTitle:t.title,name:cand.name,cid:cand.cid,answer:text,asrOriginal:text,audio:audioBlob,recDur:Math.round(recDur),
       srAvailable:!srFailed,startedAt:started,submittedAt:Date.now(),durationSec:Math.round((Date.now()-started)/1000),plays:attempts,blurs,pasteAttempts:0,
       autoSubmitted:!!auto,finalScore:null,decision:'',notes:'',rubric:{}};
-    const s=score(t.text,text,optsFor(t));sub.auto=s.auto;sub.wordAcc=s.wordAcc;sub.fieldAcc=null;
-    sub.wpm=recDur>0?Math.round(s.typedWords/(recDur/60)):null;
-    uploadingView();const ok=await submitSafely(sub);
+    uploadingView();
+    let fl=null;if(audioBlob){try{fl=await analyzeAudio(audioBlob)}catch(e){console.warn('audio analysis failed',e)}}
+    if(fl){const{segs,...m}=fl;sub.fluency=m}
+    sub.asrConf=confs.length?Math.round(100*confs.reduce((a,b)=>a+b,0)/confs.length):null;
+    const ev=speakEval(t.text,text,sub.fluency,sub.asrConf);applySpeak(sub,ev);const s={wordAcc:ev.r.wordAcc};
+    const ok=await submitSafely(sub);
     setView(`<div class="narrow">${steps(4)}<div class="card done-card"><div class="done-icon">✓</div>
       ${ok?'':'<div class="notice">The upload failed. Your answer and recording were downloaded to this computer. Please give those files to the assessor.</div>'}
       <h2>${auto?'Time is up: your recording was submitted':'Recording submitted'}</h2>
@@ -639,10 +752,10 @@ async function renderSubs(){
     <div class="row" style="margin-bottom:10px"><h3 style="margin:0">Submissions (${subs.length})</h3><span class="spacer"></span>
       <select id="fTest" style="width:auto"><option value="">All assessments</option>${tests.map(t=>`<option value="${t.id}">${esc(t.title)}</option>`).join('')}</select>
       <button class="small" onclick="exportCSV()">Export CSV</button></div>
-    ${subs.length?`<div style="overflow-x:auto"><table><thead><tr><th>Candidate</th><th>Assessment</th><th>Submitted</th><th>Time</th><th>Words</th><th>Fields</th><th>Auto</th><th>Final</th><th>Decision</th><th></th></tr></thead>
+    ${subs.length?`<div style="overflow-x:auto"><table><thead><tr><th>Candidate</th><th>Assessment</th><th>Submitted</th><th>Time</th><th>Accuracy</th><th>Fields / Fluency</th><th>Auto</th><th>Final</th><th>Decision</th><th></th></tr></thead>
     <tbody id="subRows">${subs.map(s=>`<tr data-test="${s.testId}"><td><b>${esc(s.name)}</b><div class="small muted">${esc(s.cid)}</div></td><td>${esc(s.testTitle)}<div><span class="pill ${s.kind==='speak'?'warn':'miss'} kind">${s.kind==='speak'?'Read aloud':'Listen & type'}</span></div></td>
       <td class="small">${fmtDate(s.submittedAt)}</td><td>${fmtTime(s.durationSec)}${s.autoSubmitted?' <span class="pill warn">timeout</span>':''}</td>
-      <td>${s.wordAcc}%</td><td>${s.fieldAcc??'-'}${s.fieldAcc!=null?'%':''}</td><td>${scorePill(s.auto)}</td><td>${s.finalScore!=null?scorePill(s.finalScore):'<span class="muted small">-</span>'}</td>
+      <td>${s.wordAcc}%</td><td>${s.kind==='speak'?(s.fluencyScore!=null?s.fluencyScore+'% fluency':'-'):(s.fieldAcc!=null?s.fieldAcc+'%':'-')}</td><td>${scorePill(s.auto)}</td><td>${s.finalScore!=null?scorePill(s.finalScore):'<span class="muted small">-</span>'}</td>
       <td>${s.decision?`<span class="pill ${s.decision==='Pass'?'ok':s.decision==='Fail'?'bad':'warn'}">${esc(s.decision)}</span>`:'<span class="muted small">Pending</span>'}</td>
       <td><button class="small primary" onclick="reviewSub('${s.id}')">Review</button></td></tr>`).join('')}</tbody></table></div>`
     :'<p class="muted">No submissions yet.</p>'}</div>`;
@@ -653,7 +766,7 @@ async function renderSubs(){
 function renderDiff(ops){
   let out='';
   for(const o of ops){
-    if(o.t==='eq')out+=esc(o.h.raw)+' ';
+    if(o.t==='eq')out+=(o.r.hard?`<span class="hardok" title="Difficult word: correct">${esc(o.h.raw)}</span>`:esc(o.h.raw))+' ';
     else if(o.t==='sub')out+=`<span class="sub" title="Typed">${esc(o.h.raw)}</span><span class="exp" title="Expected">${esc(o.r.raw)}</span> `;
     else if(o.t==='del')out+=`<span class="del" title="Missing">${esc(o.r.raw)}</span> `;
     else out+=`<span class="ins" title="Extra">${esc(o.h.raw)}</span> `;
@@ -662,8 +775,10 @@ function renderDiff(ops){
 }
 async function reviewSub(id){
   const s=await DB.get('submissions',id);const t=await DB.get('tests',s.testId);
-  const ref=t?t.text:(s.refSnapshot||'');const sp=s.kind==='speak';const r=score(ref,s.answer,optsFor(t||{kind:s.kind}));
-  const wpm=sp&&s.recDur?Math.round(r.typedWords/(s.recDur/60)):null;
+  const ref=t?t.text:(s.refSnapshot||'');const sp=s.kind==='speak';
+  let fl=s.fluency||null,ev=null;
+  if(sp){if(s.audio){try{fl=await analyzeAudio(s.audio)||fl}catch(e){console.warn(e)}}ev=speakEval(ref,s.answer,fl,s.asrConf)}
+  const r=sp?ev.r:score(ref,s.answer,optsFor(t||{kind:s.kind}));if(sp)r.auto=ev.overall;
   const audioUrl=sp&&s.audio?URL.createObjectURL(s.audio):null;
   const rub=s.rubric||{};const rubSel=k=>`<select id="rb_${k}"><option value="">-</option>${[1,2,3,4,5].map(n=>`<option ${rub[k]==n?'selected':''}>${n}</option>`).join('')}</select>`;
   const statusPill={correct:'<span class="pill ok">Correct</span>',wrong:'<span class="pill bad">Wrong</span>',case:'<span class="pill warn">Case only</span>',missing:'<span class="pill miss">Missing</span>'};
@@ -677,9 +792,11 @@ async function reviewSub(id){
         <span class="muted" id="rSavedAt">${s.savedFile?'Saved: <span class="mono">'+esc(s.savedFile)+'</span>':s.saveError?'<span style="color:var(--bad)">Not saved to folder ('+esc(s.saveError)+')</span>':''}</span></div>`:'<p class="muted">No audio was captured.</p>'}
       ${s.srAvailable===false?'<div class="notice" style="margin-top:8px">Speech-to-text was unavailable for this candidate. Listen to the recording, type what they said into the transcript box below, then press Re-score.</div>':''}<br>`:''}
     <div class="stats">
-      ${sp?'':`<div class="stat"><div class="v">${r.auto}%</div><div class="k">Auto score</div></div>`}
+      <div class="stat"><div class="v">${r.auto}%</div><div class="k">${sp?'Overall speaking score':'Auto score'}</div></div>
       <div class="stat"><div class="v">${r.wordAcc}%</div><div class="k">${sp?'Reading accuracy':'Word accuracy'}</div></div>
-      ${sp?`<div class="stat"><div class="v">${wpm??'-'}</div><div class="k">Words per minute</div></div><div class="stat"><div class="v">${fmtTime(s.recDur||0)}</div><div class="k">Recording length</div></div>`:''}
+      ${sp?`<div class="stat"><div class="v">${ev.r.hard.total?ev.r.hard.correct+'/'+ev.r.hard.total:'-'}</div><div class="k">Difficult words correct</div></div>
+        <div class="stat"><div class="v">${ev.flu!=null?ev.flu+'%':'-'}</div><div class="k">Fluency score</div></div>
+        <div class="stat"><div class="v">${ev.wpm??'-'}</div><div class="k">Words per minute</div></div>`:''}
       ${r.fieldAcc!==null?`<div class="stat"><div class="v">${r.fieldCorrect}/${r.fields.length}</div><div class="k">Fields exact</div></div>`:''}
       <div class="stat"><div class="v">${r.counts.sub}/${r.counts.del}/${r.counts.ins}</div><div class="k">Wrong / missing / extra words</div></div>
       <div class="stat"><div class="v">${fmtTime(s.durationSec)}</div><div class="k">Time taken${s.autoSubmitted?' (timed out)':''}</div></div>
@@ -687,7 +804,7 @@ async function reviewSub(id){
       <div class="stat"><div class="v" style="color:${s.blurs?'var(--bad)':'inherit'}">${s.blurs}</div><div class="k">Left the window</div></div>
       ${sp?'':`<div class="stat"><div class="v" style="color:${s.pasteAttempts?'var(--bad)':'inherit'}">${s.pasteAttempts}</div><div class="k">Paste attempts</div></div>`}
     </div>
-    ${sp?`<p class="small muted" style="margin-top:-6px">Case and punctuation are ignored for read-aloud rounds. Speech recognition can write numbers as digits or words, so check those differences by ear.</p>`:''}
+    ${sp?`<p class="small muted" style="margin-top:-6px">Case and punctuation are ignored for read-aloud rounds. Speech recognition can write numbers as digits or words, so check those differences by ear.</p>${fluencyPanel(ev,fl,s)}<br>`:''}
     ${r.fields.length?`<h3>Field check</h3><div style="overflow-x:auto"><table><thead><tr><th>Field</th><th>Expected</th><th>Typed</th><th>Result</th><th>Similarity</th></tr></thead><tbody>
       ${r.fields.map(f=>`<tr><td>${esc(f.key)}</td><td class="mono">${esc(f.value)}</td><td class="mono">${f.typed==null?'<span class="muted">-</span>':esc(f.typed)}</td><td>${statusPill[f.status]}</td><td>${f.sim}%</td></tr>`).join('')}
     </tbody></table></div><br>`:''}
@@ -696,7 +813,7 @@ async function reviewSub(id){
       <span class="diff"><span class="del">word</span></span> missed <span class="diff"><span class="ins">word</span></span> extra</div>
     <div class="diff">${renderDiff(r.ops)}</div><br>
     <h3>Side by side</h3>
-    ${sp?`<div class="side"><div><label style="margin-top:0">Passage</label><pre>${esc(ref)}</pre></div>
+    ${sp?`<div class="side"><div><label style="margin-top:0">Passage <span class="muted">(difficult words highlighted)</span></label><pre>${hlHard(ref)}</pre></div>
       <div><label style="margin-top:0">Transcript (speech-to-text). Correct anything the recogniser misheard, then re-score.</label>
       <textarea id="rTrans" rows="12" class="mono">${esc(s.answer)}</textarea>
       <div class="row" style="margin-top:6px"><button class="small" id="rRescore">Re-score with this transcript</button>
@@ -714,20 +831,22 @@ async function reviewSub(id){
     <div class="row" style="margin-top:14px"><button class="danger small" id="rDel">Delete submission</button><span class="spacer"></span><button class="primary" id="rSave">Save decision</button></div>
   </div>`;
   if(!dlg.open)dlg.showModal();
+  if(sp&&fl&&fl.segs)requestAnimationFrame(()=>drawTimeline($('#tl'),fl));
   dlg.onclose=()=>{if(audioUrl)URL.revokeObjectURL(audioUrl)};
   const keepForm=()=>{s.finalScore=$('#rScore').value===''?null:+$('#rScore').value;s.decision=$('#rDec').value;s.notes=$('#rNotes').value;
     if(sp)s.rubric={pron:$('#rb_pron').value,flu:$('#rb_flu').value,cla:$('#rb_cla').value}};
-  const rescoreWith=async txt=>{keepForm();s.answer=txt;const r2=score(ref,txt,optsFor(t||{kind:s.kind}));s.auto=r2.auto;s.wordAcc=r2.wordAcc;
-    s.wpm=s.recDur?Math.round(r2.typedWords/(s.recDur/60)):null;if(s.finalScore===r.auto)s.finalScore=null;await DB.put('submissions',s);reviewSub(s.id)};
+  const keepFluency=()=>{if(fl){const{segs,...m}=fl;s.fluency=m}};
+  const rescoreWith=async txt=>{keepForm();s.answer=txt;keepFluency();applySpeak(s,speakEval(ref,txt,s.fluency,s.asrConf));
+    if(s.finalScore===r.auto)s.finalScore=null;await DB.put('submissions',s);reviewSub(s.id)};
   if($('#rDl'))$('#rDl').onclick=async()=>{const f=await recordingFile(s);downloadBlob(f.blob,f.name)};
   if($('#rSaveF'))$('#rSaveF').onclick=async()=>{
     if(!FS.handle){try{await FS.pick()}catch{return}}
     try{const p=await saveRecording(s,true);$('#rSavedAt').innerHTML='Saved: <span class="mono">'+esc(p)+'</span>'}catch(e){alert('Could not save: '+(e.message||e))}};
   if($('#rRescore'))$('#rRescore').onclick=()=>rescoreWith($('#rTrans').value.trim());
   if($('#rRevert'))$('#rRevert').onclick=()=>rescoreWith(s.asrOriginal);
-  $('#rSave').onclick=async()=>{keepForm();if(sp&&$('#rTrans').value.trim()!==s.answer){s.answer=$('#rTrans').value.trim();
-      const r2=score(ref,s.answer,optsFor(t||{kind:s.kind}));Object.assign(r,{auto:r2.auto,wordAcc:r2.wordAcc,fieldAcc:r2.fieldAcc,typedWords:r2.typedWords})}
-    s.auto=r.auto;s.wordAcc=r.wordAcc;s.fieldAcc=r.fieldAcc;if(sp)s.wpm=s.recDur?Math.round(r.typedWords/(s.recDur/60)):null;
+  $('#rSave').onclick=async()=>{keepForm();
+    if(sp){s.answer=$('#rTrans').value.trim();keepFluency();applySpeak(s,speakEval(ref,s.answer,s.fluency,s.asrConf))}
+    else{s.auto=r.auto;s.wordAcc=r.wordAcc;s.fieldAcc=r.fieldAcc}
     s.reviewedAt=Date.now();await DB.put('submissions',s);dlg.close();renderSubs()};
   $('#rDel').onclick=async()=>{if(confirm('Delete this submission permanently?')){await DB.del('submissions',s.id);dlg.close();renderSubs()}};
 }
@@ -739,7 +858,7 @@ async function saveAllRecordings(force=false){
 }
 async function exportCSV(){
   const subs=(await DB.all('submissions')).sort((a,b)=>a.submittedAt-b.submittedAt);
-  const cols=['name','cid','testTitle','kind','submittedAt','durationSec','plays','blurs','pasteAttempts','autoSubmitted','wordAcc','fieldAcc','wpm','recDur','pronunciation','fluency','clarity','auto','finalScore','decision','notes','savedFile','answer'];
+  const cols=['name','cid','testTitle','kind','submittedAt','durationSec','plays','blurs','pasteAttempts','autoSubmitted','wordAcc','fieldAcc','wpm','recDur','hardAcc','fluencyScore','pronunciation','fluency','clarity','auto','finalScore','decision','notes','savedFile','answer'];
   const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
   const val=(s,c)=>c==='submittedAt'?new Date(s[c]).toISOString():c==='kind'?(s.kind==='speak'?'read-aloud':'listen-type')
     :c==='pronunciation'?s.rubric?.pron:c==='fluency'?s.rubric?.flu:c==='clarity'?s.rubric?.cla:s[c];
@@ -773,7 +892,9 @@ async function editTest(id){
       <option value="speak" ${isSpeak(t)?'selected':''}>Read aloud: candidate reads a paragraph, speech is converted to text and scored</option></select>
     <label id="txtLbl"></label>
     <textarea id="tText" rows="14" class="mono">${esc(t.text)}</textarea>
-    <div class="notice" id="spkNote" style="margin-top:10px">Speech-to-text uses the browser's built-in recogniser (Chrome or Edge). The candidate's recording stays on this computer, but the browser sends the audio to its speech service (Google or Microsoft) to produce the text. You can listen to every recording and correct the transcript during review.</div>
+    <div class="row spk" style="margin-top:8px"><button class="small" type="button" id="tAuto">✨ Auto-mark difficult words</button>
+      <button class="small" type="button" id="tClear">Clear marks</button><span class="small muted" id="hardCount"></span></div>
+    <div class="notice" id="spkNote" style="margin-top:10px">Speech-to-text uses the browser's built-in recogniser (Chrome or Edge). The recording is stored in your Supabase project. To produce the text, the browser also sends the audio to its speech service (Google or Microsoft). You can listen to every recording and correct the transcript during review.</div>
     <div class="grid2">
       <div class="spk"><label>Speaker's accent / language</label><select id="tLang">${langs.map(([v,n])=>`<option value="${v}" ${t.lang===v?'selected':''}>${n}</option>`).join('')}</select></div>
       <div class="lst"><label>Audio source</label><select id="tMode"><option value="tts" ${t.mode==='tts'?'selected':''}>Computer voice reads the text (offline)</option><option value="file" ${t.mode==='file'?'selected':''}>Upload a recorded audio file</option></select></div>
@@ -796,9 +917,13 @@ async function editTest(id){
     dlg.querySelectorAll('.lst').forEach(e=>e.style.display=sp?'none':'');dlg.querySelectorAll('.spk').forEach(e=>e.style.display=sp?'':'none');
     $('#spkNote').style.display=sp?'':'none';
     $('#plLbl').textContent=sp?'Max recording attempts (0 = unlimited)':'Max plays (0 = unlimited)';
-    $('#txtLbl').innerHTML=sp?'Paragraph the candidate will read aloud (as long as you need)':'Reference text (the correct answer). Lines formatted as <span class="mono">Field: Value</span> are scored field by field.';
+    $('#txtLbl').innerHTML=sp?'Paragraph the candidate will read aloud. Wrap difficult words in <span class="mono">*asterisks*</span> to score them separately. Candidates won\'t see the asterisks.':'Reference text (the correct answer). Lines formatted as <span class="mono">Field: Value</span> are scored field by field.';
     if(!sp){const f=$('#tMode').value==='file';$('#vBox').style.display=f?'none':'';$('#gBox').style.display=f?'none':'';$('#fBox').style.display=f?'':'none'}};sync();
-  $('#tMode').onchange=sync;$('#tKind').onchange=sync;$('#tRate').oninput=e=>$('#rateV').textContent=e.target.value;$('#tGap').oninput=e=>$('#gapV').textContent=e.target.value;
+  $('#tMode').onchange=sync;$('#tKind').onchange=sync;
+  const hc=()=>{const m=($('#tText').value.match(/\*([^*\n]+)\*/g)||[]);$('#hardCount').textContent=m.length?`${m.length} difficult word(s) marked`:'No difficult words marked'};hc();
+  $('#tText').addEventListener('input',hc);
+  $('#tAuto').onclick=()=>{$('#tText').value=autoMarkHard($('#tText').value);hc()};
+  $('#tClear').onclick=()=>{$('#tText').value=plainText($('#tText').value);hc()};$('#tRate').oninput=e=>$('#rateV').textContent=e.target.value;$('#tGap').oninput=e=>$('#gapV').textContent=e.target.value;
   let newFile=null;$('#tFile').onchange=e=>{newFile=e.target.files[0]||null};
   const collect=()=>({...t,kind:$('#tKind').value,lang:$('#tLang').value,showLive:$('#tLive').checked,title:$('#tTitle').value.trim(),text:$('#tText').value,mode:$('#tMode').value,voiceURI:$('#tVoice')?.value||'',
     rate:+$('#tRate').value,gap:+$('#tGap').value,maxPlays:+$('#tPlays').value||0,timeLimit:+$('#tTime').value||0,allowPause:$('#tPause').checked,
@@ -837,6 +962,13 @@ async function renderSettings(){
     </div>
     <label class="check"><input type="checkbox" id="sCase" ${settings.ignoreCase?'checked':''}> Ignore upper/lower case</label>
     <label class="check"><input type="checkbox" id="sPunct" ${settings.ignorePunct?'checked':''}> Ignore punctuation in word accuracy (fields are always strict)</label>
+    <h3 style="margin-top:20px">Read-aloud scoring</h3>
+    <p class="small muted">Overall speaking score = weighted average of <b>reading accuracy</b> (words read correctly), <b>difficult words</b> (words marked with *asterisks* that were understood) and <b>fluency</b> (pace, long pauses, continuity, fillers and restarts, measured from the recording).</p>
+    <div class="grid3">
+      <div><label>Reading accuracy weight</label><input type="number" id="sA" min="0" value="${settings.spkAccW}"></div>
+      <div><label>Difficult words weight</label><input type="number" id="sH" min="0" value="${settings.spkHardW}"></div>
+      <div><label>Fluency weight</label><input type="number" id="sFl" min="0" value="${settings.spkFluW}"></div>
+    </div>
     <h3 style="margin-top:20px">Assessor accounts</h3>
     <p class="small muted">Add assessors in Supabase: create the user under Authentication → Users, then add their email to the <span class="mono">assessors</span> table.</p>
     <div class="row" style="margin-top:16px"><button id="sRescore">Re-score all submissions</button><span class="spacer"></span><button class="primary" id="sSave">Save settings</button></div>
@@ -849,9 +981,11 @@ async function renderSettings(){
   if($('#fAll'))$('#fAll').onclick=()=>saveAllRecordings(confirm('Re-save recordings that were already saved too?\n\nOK = save all, Cancel = only unsaved ones')).then(renderSettings);
   if($('#sFmt'))$('#sFmt').onchange=async e=>{settings.audioFormat=e.target.value;await DB.put('kv',settings)};
   $('#sSave').onclick=async()=>{Object.assign(settings,{wordWeight:+$('#sW').value||0,fieldWeight:+$('#sF').value||0,passMark:+$('#sP').value||0,
-    ignoreCase:$('#sCase').checked,ignorePunct:$('#sPunct').checked});await DB.put('kv',settings);alert('Settings saved.')};
+    ignoreCase:$('#sCase').checked,ignorePunct:$('#sPunct').checked,spkAccW:+$('#sA').value||0,spkHardW:+$('#sH').value||0,spkFluW:+$('#sFl').value||0});await DB.put('kv',settings);alert('Settings saved.')};
   $('#sRescore').onclick=async()=>{const subs=await DB.all('submissions');let n=0;for(const s of subs){const t=await DB.get('tests',s.testId);if(!t)continue;
-    const r=score(t.text,s.answer,optsFor(t));s.auto=r.auto;s.wordAcc=r.wordAcc;s.fieldAcc=r.fieldAcc;await DB.put('submissions',s);n++}alert(`Re-scored ${n} submission(s).`)};
+    if(isSpeak(t))applySpeak(s,speakEval(t.text,s.answer,s.fluency,s.asrConf));
+    else{const r=score(t.text,s.answer,optsFor(t));s.auto=r.auto;s.wordAcc=r.wordAcc;s.fieldAcc=r.fieldAcc}
+    await DB.put('submissions',s);n++}alert(`Re-scored ${n} submission(s).`)};
   $('#bExp').onclick=async()=>{const tests=(await DB.all('tests')).map(({audio,...t})=>t);const data={version:1,exportedAt:new Date().toISOString(),settings,tests,submissions:await DB.all('submissions')};
     const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='assessment-backup.json';a.click()};
   $('#bImp').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());

@@ -1,0 +1,46 @@
+[debug] [2026-11-12T07:28:41.615Z] ----------------------------------------------------------------------
+[debug] [2026-11-12T07:28:41.617Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\User\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only hosting --project audio-assessment --non-interactive
+[debug] [2026-11-12T07:28:41.617Z] CLI Version:   15.32.1
+[debug] [2026-11-12T07:28:41.617Z] Platform:      win32
+[debug] [2026-11-12T07:28:41.617Z] Node Version:  v24.20.0
+[debug] [2026-11-12T07:28:41.617Z] Detected Agent: claude-code_2-1-322_agent
+[debug] [2026-11-12T07:28:41.617Z] Time:          Thu Nov 12 2026 12:58:41 GMT+0530 (India Standard Time)
+[debug] [2026-11-12T07:28:41.617Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-11-12T07:28:57.851Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-11-12T07:28:57.851Z] > authorizing via signed-in user (chaithanya@xtransmatrix.com)
+[debug] [2026-11-12T07:28:57.851Z] [iam] checking project audio-assessment for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2026-11-12T07:28:57.864Z] Checked if tokens are valid: false, expires at: 1794411407332
+[debug] [2026-11-12T07:28:57.864Z] Checked if tokens are valid: false, expires at: 1794411407332
+[debug] [2026-11-12T07:28:57.864Z] > refreshing access token with scopes: []
+[debug] [2026-11-12T07:28:57.866Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2026-11-12T07:28:57.866Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-11-12T07:28:58.141Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 400
+[debug] [2026-11-12T07:28:58.141Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[error] Authentication Error: Your credentials are no longer valid. Please run firebase login --reauth
+
+For CI servers and headless environments, generate a new token with firebase login:ci
+[error] Authentication Error: Your credentials are no longer valid. Please run firebase login --reauth
+
+For CI servers and headless environments, generate a new token with firebase login:ci
+[debug] [2026-11-12T07:28:58.142Z] [iam] error while checking permissions, command may fail: Authentication Error: Your credentials are no longer valid. Please run firebase login --reauth
+
+For CI servers and headless environments, generate a new token with firebase login:ci
+[debug] [2026-11-12T07:28:58.143Z] Checked if tokens are valid: false, expires at: 1794411407332
+[debug] [2026-11-12T07:28:58.143Z] Checked if tokens are valid: false, expires at: 1794411407332
+[debug] [2026-11-12T07:28:58.143Z] > refreshing access token with scopes: []
+[debug] [2026-11-12T07:28:58.144Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2026-11-12T07:28:58.144Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-11-12T07:28:58.317Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 400
+[debug] [2026-11-12T07:28:58.317Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[error] Authentication Error: Your credentials are no longer valid. Please run firebase login --reauth
+
+For CI servers and headless environments, generate a new token with firebase login:ci
+[error] Authentication Error: Your credentials are no longer valid. Please run firebase login --reauth
+
+For CI servers and headless environments, generate a new token with firebase login:ci
+[debug] [2026-11-12T07:28:58.317Z] Authentication Error: Your credentials are no longer valid. Please run firebase login --reauth
+
+For CI servers and headless environments, generate a new token with firebase login:ci
+[error] 
+[error] Error: Assertion failed: resolving hosting target of a site with no site name or target name. This should have caused an error earlier
