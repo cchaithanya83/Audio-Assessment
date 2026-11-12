@@ -5,3 +5,5 @@ assessment-backup*.json
 .DS_Store
 Thumbs.db
 .firebase/
+firebase-debug.log
+*-debug.log
